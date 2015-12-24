@@ -1,0 +1,616 @@
+*{
+	margin: 0px;
+	text-decoration: none;
+	color: black;
+	font-family: helvetica;
+	list-style-type: none;
+	color:rgb(100,100,100);
+}
+
+#layout_wrapper{
+	height: 100vh;
+    background-color: rgb(240, 240, 240);
+}
+
+/* ------------------------- HEAD BAR -------------------------*/
+#headbar{
+	height: 38px;
+    width: 100%;
+    background-color: rgb(249,249,249);
+    border-top: 1px solid rgb(226,226,226);
+    border-bottom: 1px solid rgb(200,200,200);
+    box-shadow: 0px 2px 10px rgb(215,215,215);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    padding-top: 12px;
+}
+.headbar_item{
+	display: inline-block;
+	font-size: 15px;
+}
+#mobile_menu_logo{
+	font-size: 24px;
+    color: rgb(0,0,0);
+    font-weight: 100;
+    width: 220px;
+    text-align: center;
+}
+.sign_out_item{
+	float: right;
+	position: relative;
+	right: 20px;
+	top: 3px;
+}
+#restaurant_name{
+	color: rgb(0,0,0);
+}
+#name_signout_divider{
+	border-right: 1px solid black;
+    height: 23px;
+    margin: 0px 5px 0px 5px;
+}
+#sign_out{
+	color: rgb(100,100,100);
+}
+#sign_out:hover{
+	text-decoration: underline;
+}
+/* ---------------------------------------------------------------------------*/
+
+/*--------------------------Left Side Bar (Edit Menu) --------------------------*/
+
+#left_sidebar_wrapper{
+	width: 220px;
+    padding: 5px 0px 0px 0px;
+    border-right: 1px solid rgb(224, 224, 224);
+    background-color: rgb(240,240,240);
+    height: 100vh;
+    position: fixed;
+    top: 49px;
+}
+#left_sidebar_tabs_wrapper{
+	display: inline-block;
+    width: 100%;
+    border-bottom: 1px solid rgb(200,200,200);
+}
+.left_sidebar_tab_header{
+	display: inline-block;
+    margin: 0px 10px 0px 0px;
+    font-size: 15px;
+    line-height: 25px;
+    padding: 0px 5px 0px 5px;
+    color: black;
+    font-weight: 100;
+    width: 80px;
+    text-align: center;
+    position: relative;
+    left: 15px;
+}
+.left_sidebar_tab_header:hover{
+	border-bottom: 4px solid rgb(117, 117, 117);
+	cursor: pointer;
+	padding: 0px 0px;
+	margin: 0px 15px 0px 5px;
+}
+
+.left_sidebar_tab_list{
+	padding: 10px 0px 0px 0px;
+}
+.left_sidebar_tab_li{
+	
+}
+.category_name, .filter_name{
+	color: rgb(0,0,0);
+    font-size: 13px;
+    padding: 0px 0px 0px 5px;
+}
+#new_category_btn{
+	line-height: 25px;
+    font-size: 13px;
+    margin: 25px auto 0px auto;
+    font-weight: 100;
+    text-align: center;
+    color: rgb(127, 127, 127);
+    width: 195px;
+    padding: 1px 0px 1px 0px;
+    border: 1px solid rgb(200,200,200);
+}
+#new_category_btn:hover{
+	color: rgb(0,0,0);
+	border: 1px solid rgb(0,0,0);
+	cursor: pointer;
+}
+#food_item_filters{
+	padding: 10px 0px 0px 0px;
+}
+.filter_option{
+	padding:0px 0px 0px 30px;
+	line-height: 30px;
+}
+
+
+/*---------------------------------------------------------------------------------*/
+
+/*--------------------------- Center List of Foods---------------------------*/
+#category_content_wrapper{
+	margin: 52px 350px 0px 220px;
+	background-color: rgb(240, 240, 240);
+}
+#category_content_list{
+	padding-left: 0px;
+	margin: auto;
+	padding-top: 20px;
+	line-height: 1;
+	width: 300px;
+	-webkit-column-count: 1;
+	-webkit-column-width: 280px;
+}
+@media(min-width: 1200px){
+	#category_content_list{
+		width: 630px;
+		-webkit-column-gap:   25px;
+		-webkit-column-count: 2;
+	}
+}
+@media(min-width: 1500px){
+	#category_content_list{
+		width: 900px;
+		-webkit-column-gap:   10px;
+		-webkit-column-count: 3;
+	}
+}
+
+.food_entry{
+	background-color: rgb(255,255,255);
+    box-shadow: 0px 5px 5px rgb(193, 193, 193);
+    width: 290px;
+    display: inline-block;
+    margin: 0px 0px 15px 0px;
+    border: 2px solid transparent;
+}
+.food_entry img{
+	margin:5px;
+	max-width:280px;
+	max-height:100%;
+
+}
+.food_info_wrap{
+	height: 75px;
+	width: 280px;
+	margin:0px 5px 0px 5px;
+}
+
+.food_entry_name{
+	width: 70%;
+	display: inline-block;
+}
+.food_entry_price{
+	width: 28%;
+	text-align: right;
+	display: inline-block;
+}
+.food_entry_description{
+	margin-top: 10px;
+	clear: both;
+	font-size: 12px;
+	text-overflow: ellipsis;
+}
+/*------------------------------------------------------------------------------*/
+
+/*-------------------------------Right Side Info Bar ---------------------------*/
+#right_sidebar_wrapper{
+	width: 350px;
+    height: 100vh;
+    background-color: rgb(249,249,249);
+    border-left: 1px solid rgb(225, 225, 225);
+    position: fixed;
+    right: 0px;
+    top: 52px;
+}
+#right_sidebar_header{
+	text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid rgb(228, 228, 228);
+    color: rgb(0,0,0);
+}
+.right_sidebar_tab_header{
+	width: 100px;
+    display: inline-block;
+    text-align: center;
+    margin: 2px 0px 10px 8px;
+    padding: 8px 0px;
+    border-top: 4px solid transparent;
+    font-size: 14px;
+}
+.right_sidebar_tab_header:hover{
+	border-bottom: 4px solid rgb(117, 117, 117);
+	width: 90px;
+	margin:2px 5px 10px 13px;
+	cursor: pointer;
+}
+
+#right_sidebar_image_wrapper{
+	padding: 5px 35px;
+	margin-bottom: 15px;
+}
+#right_sidebar_image_wrapper img{
+	max-width: 280px;
+	max-height: 280px;
+}
+.label_field_wrapper{
+	margin: 15px 10px 15px 25px;
+    clear: right;
+    font-size: 14px;
+    line-height: 18px;
+}
+.right_sidebar_label{
+	width: 100px;
+    display: inline-block;
+    line-height: 25px;
+    font-weight: 100;
+}
+.right_sidebar_input{
+	width: 209px;
+    line-height: 20px;
+    float: right;
+}
+.right_sidebar_textarea{
+	width: 310px;
+    height: 100px;
+    font-size: 13px;
+    resize: vertical;
+}
+.time_served_select{
+	margin: 4px 1px 0px 0px;
+    float: right;
+    width: 105px;
+}
+.food_type_select{
+	float: right;
+    width: 215px;
+    margin: 4px 0px 0px 0px;
+}
+.right_sidebar_options_dd{
+	width: 158px;
+    padding: 10px 0px 10px 0px;
+    background: rgb(255,255,255);
+    border: 1px solid rgb(200, 200, 200);
+    font-size: 13px;
+    margin: auto;
+}
+.right_sidebar_options_btn{
+	width: 160px;
+    height: 40px;
+    margin: 0px auto 0px auto;
+    text-align: center;
+    font-size: 15px;
+    line-height: 40px;
+    background-color: rgb(66, 133, 244);
+    color: white;
+}
+.right_sidebar_options_btn:hover{
+	cursor: pointer;
+}
+
+/*		begin food performance tab css					*/
+#graph_label{
+	width: 20px;
+	height: 200px;
+	float:left;
+	padding: 0px 0px 0px 0px;
+    margin: 0px 10px 0px 10px;
+}
+.graph_increment{
+	font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 28px;
+    color: black;
+}
+#performance_canvas{
+    background-color: #F0F0F0;
+    margin: 0px auto 0px auto;
+    border: 1px solid black;
+}
+#today_performance_wrapper{
+    margin: 0px auto 20px auto;
+}
+#today_perormance_value{
+	font-size: 35px;
+}
+#time_scale_header,#today_perormance_value{
+	color: black;
+	text-align: center;
+}
+#interested_and_viewed{
+	font-size: 13px;
+	text-align: center;
+}
+#timescale_select_wrapper{
+	font-size: 13px;
+    width: 200px;
+    margin: 10px auto 10px auto;
+    border-bottom: 1px solid rgb(225, 225, 225);
+    padding: 0px 55px 10px 55px;
+}
+
+/* 					being food diagnostic tab 					*/
+#feedback_Qs_wrapper{
+	width: 300px;
+    margin: 0px auto 0px auto;
+    font-size: 15px;
+    font-weight: 100;
+}
+#feedback_Qs_list{
+
+}
+.feedback_Q_li{
+	list-style-type: decimal;
+	margin: 5px 0px 5px 0px;
+}
+.feedback_Q_input{
+	width: 240px;
+	height: 20px;
+}
+#new_feedback_Q{
+	border: 1px solid rgb(200, 200, 200);
+    text-align: center;
+    font-size: 13px;
+    padding: 5px 0px 5px 0px;
+    margin: 10px 0px 0px 0px;
+}
+.remove_Q:hover{
+	cursor: pointer;
+}
+#new_feedback_Q:hover{
+	color: black;
+	border: 1px solid rgb(0,0,0);
+	cursor: pointer;
+}
+#enable_custom_comments{
+	font-size: 15px;
+	margin: 15px 0px 0px 25px;
+    font-weight: 100;
+}
+.diagnostic_info{
+	font-size: 15px;
+    color: black;
+    margin: 0px 0px 0px 25px;
+    font-weight: 100;
+}
+#survey_type_wrap{
+	font-size: 15px;
+}
+#survey_type_wrap div{
+	text-align: center;
+}
+#if_interested_wrapper{
+	float: left;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 10px 0px 20px 55px;
+}
+#if_not_interested_wrapper{
+	float: right;
+    font-size: 13px;
+    margin: 10px 55px 20px 0px;
+    font-weight: bold;
+}
+.survey_wrapper{
+	width: 300px;
+    margin: 0px auto 20px auto;
+    font-size: 15px;
+    font-weight: 100;
+}
+#feedback_message_wrapper{
+	font-size: 15px;
+	clear: both;
+}
+#feedback_message_wrapper label{
+	display: block;
+	margin: 0px 0px 5px 0px;
+}
+#feedback_message_textarea{
+	width: 300px;
+    height: 100px;
+    font-size: 13px;
+    resize: vertical;
+}
+.right_sidebar_options_wrapper{
+	margin: 40px 0px 0px 0px;
+}
+
+
+#survey_status_report{
+	text-align: center;
+	font-weight: 100;
+}
+#list_of_survey_results{
+	border: 1px solid rgb(235, 235, 235);
+    padding: 5px 5px 0px 5px;
+    width: 300px;
+    margin: 20px auto 0px auto;
+    font-size: 13px;
+    max-height: 430px;
+    overflow-y: scroll;
+}
+.survey_results_li{
+	border-bottom: 1px solid rgb(185, 185, 185);
+    padding: 10px 5px 10px 5px;
+}
+.survey_detail_element{
+	font-weight: 100;
+}
+.survey_results_message_header{
+	text-align: center;
+	margin: 10px 0px 5px 0px;
+}
+.survey_results_message{
+	margin: 5px 0px 10px 0px;
+    text-align: justify;
+    font-weight: 100;
+}
+.survey_results_questions_list{
+	padding: 0px 0px 0px 20px;
+	font-weight: 100;
+}
+.survey_question_data_li{
+	list-style-type: decimal;
+	margin: 0px 0px 5px 0px;
+}
+.survey_results_question_text{
+	font-weight: 500;
+}
+.survey_results_comments_header{
+	margin: 10px 0px 5px 0px;
+    text-align: center;
+}
+.survey_results_comments_list{
+	padding: 0px 0px 0px 20px;
+}
+.survey_results_comments_li{
+	list-style-type: decimal;
+    font-weight: 100;
+    margin: 0px 0px 5px 0px;
+}
+
+/*-------------------------------------------------------------------------------------*/
+/* ---------------------------- Symbols, Glyphs, and Icons-----------------------------*/
+.directory_triangle1{
+    position: relative;
+    left: 10px;
+    display: inline-block;
+    border-left: 7px solid rgb(249,249,249);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-radius: 50%;
+}
+.directory_triangle2{
+     border-left: 7px solid black;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    display: inline-block;
+    border-radius: 50%;
+}
+.path_new_food_li div[class*="fork_tong"]{
+  	width: 1px;
+    height: 3px;
+    background-color: rgb(255,255,255);
+    margin-left: -1px;
+    margin-right: -2px;
+    position: relative;
+    left: 6px;
+    display: inline-block;
+    top: 5px;
+}
+.new_food_icon{
+	position: relative;
+    width: 14px;
+    height: 17px;
+    display: inline-block;
+    background-color: rgb(150,150,150);
+    top: 4px;
+    right: 1px;
+}
+.fork_container{
+  	position: absolute;
+    top: -19px;
+    left: 1px;
+}
+.knife_container{
+ 	position: absolute;
+    left: 9px;
+    top: 3px;
+}
+.menu_icon_container{
+  	background-color: rgb(150,150,150);
+    width: 16px;
+    height: 21px;
+    display: inline-block;
+    position: relative;
+    top: 7px;
+}
+.pseudo_content{
+  	margin: 0px 0px 2px 3px;
+    width: 10px;
+    height: 1px;
+    background-color: white;
+    position: relative;
+    top: 4px;
+}
+.create_new_option div[class*="fork_tong"]{
+  	width: 1px;
+    height: 3px;
+    background-color: rgb(255,255,255);
+    margin-left: -1px;
+    margin-right: -2px;
+    position: relative;
+    left: 2px;
+    display: inline-block;
+    top: 4px;
+}
+.fork_body{
+  	width: 5px;
+    height: 5px;
+    background-color: rgb(255,255,255);
+    border-radius: 0px 0px 50px 50px;
+    margin-top: -6px;
+    position: relative;
+    left: 1px;
+}
+.ford_handle{
+  width:2px;
+  height:8px;
+  background-color:rgb(255,255,255);
+  margin-top:-2px;
+  margin-left:3px;
+}
+.knife_blade{
+  height:8px;
+  width:3px;
+  border-radius:20px 10px 0px 0px;
+  background-color:rgb(255,255,255);
+  position:relative;
+  bottom:1px;
+}
+.knife_handle{
+  height:7px;
+  width:2px;
+  background-color:rgb(255,255,255);
+  margin-left:1px;
+  position:relative;
+  bottom:2px;
+}
+/* --------------------------------------------------------------------------------------------*/
+
+/*All attributes that have the highest priority go here (e.g. item selected)*/
+.item{
+	border-left: 5px solid transparent;
+	padding:0px 0px 0px 30px;
+	line-height: 30px;
+}
+.item:hover{
+	border-left: 5px solid rgb(100,100,100);
+	background-color: rgb(200,200,200);
+	cursor: pointer;
+}
+.item_selected{
+	border-left: 5px solid rgb(209,72,54);
+    
+}
+.item_selected span{
+	color: rgb(209,72,54);
+}
+.food_selected{
+	border: 2px solid rgb(0,149,255);
+}
+
+.tab_selected{
+	border-bottom: 4px solid rgb(70, 131, 234);
+}
+
+
+
+
+

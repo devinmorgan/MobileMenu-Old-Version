@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Title of the document</title>
+		<link rel="stylesheet" type="text/css" href="Manage.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="Manage.js"></script>
+	</head>
+
+	<body onload="hideRightSidebarElements(),drawPerformanceGraph([.14,.18,.15,.21,.19,.18,.24,.18,.15,.21]);">
+		<div id="headbar">
+			<div id="mobile_menu_logo" class="headbar_item">Mobile Menu</div>
+			<div id="sign_out" class="headbar_item sign_out_item">Sign Out</div>
+			<div id="name_signout_divider" class="headbar_item sign_out_item"></div>
+			<div id="restaurant_name" class="headbar_item sign_out_item">Restaurant Name</div>
+		</div>
+		<div id="layout_wrapper">
+			<div id="right_sidebar_wrapper">
+				<h3 id="right_sidebar_header">Category Name</h3>
+				<div class="right_sidebar_container" data-container-type="category">
+					<div class="label_field_wrapper">
+						<label class="right_sidebar_label">Category Title</label>
+						<input type="text" class="right_sidebar_input title" data-container-type="category" placeholder="Category Name"></input>
+					</div>
+					<div class="label_field_wrapper">
+						<label >Default Description</label>
+						<textarea class="right_sidebar_textarea" data-container-type="category" placeholder="Offer details about subsitions or add-ons available with this category"></textarea>
+					</div>
+					<div class="label_field_wrapper">
+						<label class="right_sidebar_label">Default Price</label>
+						<input type="text" class="right_sidebar_input price" data-container-type="category" placeholder="e.g. $9.99"></input>
+					</div>
+					<div class="label_field_wrapper">
+						<label class="right_sidebar_label">Default Time</label>
+						<select class="time_served_select from_time" data-container-type="category">
+							<option value="">--From--</option>
+						</select>
+						<select class="time_served_select until_time" data-container-type="category">
+							<option value="">--Until--</option>
+						</select>
+					</div>
+					<div class="label_field_wrapper">
+						<label class="right_sidebar_label">Default Type</label>
+						<select class="food_type_select" data-container-type="category">
+							<option value="">--Choose a type--</option>
+							<option value="drink">Drink</option>
+							<option value="starter">Starter</option>
+							<option value="main">Main</option>
+							<option value="finisher">Finisher</option>
+						</select>
+					</div>
+					<ul class="right_sidebar_options_dd" data-container-type="category" style="display: none;">
+						<li class="right_sidebar_tab_li item" onclick="createNewFoodItem()">
+							+ New Food
+						</li>
+						<li class="right_sidebar_tab_li item" onclick="saveMenuCategory()">
+							Save Category
+						</li>
+						<li class="right_sidebar_tab_li item" onclick="deleteMenuCategory()">
+							Delete Category
+						</li>
+					</ul>
+					<div class="right_sidebar_options_btn" data-container-type="category" onclick="displayOptionsMenu(this)">
+						Options
+					</div>
+				</div>
+				<div class="right_sidebar_container" data-container-type="food">
+					<span class="right_sidebar_tab_header tab_selected" data-tab-number="1" data-tab-className="right_sidebar_tab_wrapper" onclick="selectRightAndLeftSidebarTabs(this)">Edit</span>
+					<span class="right_sidebar_tab_header" data-tab-number="2" data-tab-className="right_sidebar_tab_wrapper" onclick="selectRightAndLeftSidebarTabs(this)">Performance</span>
+					<span class="right_sidebar_tab_header" data-tab-number="3" data-tab-className="right_sidebar_tab_wrapper" onclick="selectRightAndLeftSidebarTabs(this)">Diagnostics</span>
+					<div class="right_sidebar_tab_wrapper" data-tab-number="1">
+						<div id="right_sidebar_image_wrapper">
+							<img src="images/chicken_wings_hot.jpg">
+						</div>
+						<div class="label_field_wrapper">
+							<label class="right_sidebar_label">Food Title</label>
+							<input type="text" class="right_sidebar_input title" data-container-type="food" placeholder="Category Name"></input>
+						</div>
+						<div class="label_field_wrapper">
+							<label style="font-weight:100;">Description</label>
+							<textarea class="right_sidebar_textarea" data-container-type="food" placeholder="Offer details about subsitions or add-ons available with this category"></textarea>
+						</div>
+						<div class="label_field_wrapper">
+								<label class="right_sidebar_label">Food Price</label>
+								<input type="text" class="right_sidebar_input price" data-container-type="food" placeholder="e.g. $9.99"></input>
+							</div>
+						<div class="label_field_wrapper">
+							<label class="right_sidebar_label">Served Time</label>
+							<select class="time_served_select until_time" data-container-type="food">
+								<option value="">--Until--</option>
+							</select>
+							<select class="time_served_select from_time" data-container-type="food">
+								<option value="">--From--</option>
+							</select>
+						</div>
+						<div class="label_field_wrapper">
+							<label class="right_sidebar_label">Food Type</label>
+							<select class="food_type_select" data-container-type="food">
+								<option value="">--Choose a type--</option>
+								<option value="drink">Drink</option>
+								<option value="starter">Starter</option>
+								<option value="main">Main</option>
+								<option value="finisher">Finisher</option>
+							</select>
+						</div>
+						<ul class="right_sidebar_options_dd" data-container-type="food" style="display: none;">
+							<li class="right_sidebar_tab_li item">
+								Change Photo
+							</li>
+							<li class="right_sidebar_tab_li item" onclick="saveFoodItem()">
+								Save Food
+							</li>
+							<li class="right_sidebar_tab_li item" onclick="deleteFoodItem()">
+								Delete Food
+							</li>
+						</ul>
+						<div class="right_sidebar_options_btn" data-container-type="food" onclick="displayOptionsMenu(this)">
+							Options
+						</div>
+					</div>
+					<div class="right_sidebar_tab_wrapper" data-tab-number="2" style="display:none;">
+						<div id="today_performance_wrapper">
+							<div id="time_scale_header">Last 7 days:</div>
+							<div id="today_perormance_value">24%</div>
+							<div id="interested_and_viewed">163 ppl interested, 657 ppl viewed</div>
+						</div>
+						<div id="performance_target_wrapper">
+						</div>
+						<ul id="graph_label">
+							<li class="graph_increment">50%</li>
+							<li class="graph_increment">40%</li>
+							<li class="graph_increment">30%</li>
+							<li class="graph_increment">20%</li>
+							<li class="graph_increment">10%</li>
+						</ul>
+						<canvas id="performance_canvas" width="280px" height="200px"></canvas>
+						<div id="timescale_select_wrapper">
+							<label>View data from </label>
+							<select id="graph_timeline_select">
+								<option value="1">Last 7 days</option>
+								<option value="2">Last 14 days</option>
+								<option value="3">Last 28 days</options>
+							</select>
+						</div>
+					</div>
+					<div class="right_sidebar_tab_wrapper" data-tab-number="3" style="display:none;">
+						<div class="diagnosis_tab_container" data-survey-tab="1">
+							<div id="survey_status_report"><span style="font-weight:500;">Currently Surveying:</span> <span>36 out of 100 ppl</span></div>
+							<ul id="list_of_survey_results">
+								<li class="survey_results_li">
+									<div class="survey_results_timestamp">Duration: <span class="survey_detail_element">10/13/15 - Present</span></div>
+									<div class="survey_results_type">Type: <span class="survey_detail_element">Not Interested</span></div>
+									<div class="survey_results_message_header">Message:</div>
+									<p class="survey_results_message">Hello valued guest! We have noticed that many people have not been interested in a food you recently observed and we were wondering if you could provide us with some feedback so that we may improve the quality of the foods that we offer?</p>
+									<ol class="survey_results_questions_list">
+										<li class="survey_question_data_li">
+											<div class="survey_results_question_text">Too Expensive?</div>
+											<p class="survey_results_question_data">18 out of 36 ppl agree</p>
+										</li>
+										<li class="survey_question_data_li">
+											<div class="survey_results_question_text">Doesn't seem interesting?</div>
+											<p class="survey_results_question_data">6 out of 36 ppl agree</p>
+										</li>
+									</ol>
+									<div class="survey_results_comments_header">Comments: 3 out of 36 ppl</div>
+									<ol class="survey_results_comments_list">
+										<li class="survey_results_comments_li">
+											<p>This food looks really good but I think it extremely expenssive</p>
+										</li>
+										<li class="survey_results_comments_li">
+											<p>Waaayyy over priced yo!</p>
+										</li>
+									</ol>
+								</li>
+								<li class="survey_results_li">
+									<div class="survey_results_timestamp">Duration: <span class="survey_detail_element">7/25/15 - 7/28/15</span></div>
+									<div class="survey_results_type">Type: <span class="survey_detail_element">Interested</span></div>
+									<div class="survey_results_message_header">Message:</div>
+									<p class="survey_results_message">Hello valued guest! We have noticed that many people have not been interested in a food you recently observed and we were wondering if you could provide us with some feedback so that we may improve the quality of the foods that we offer?</p>
+									<ol class="survey_results_questions_list">
+										<li class="survey_question_data_li">
+											<div class="survey_results_question_text">Too Expensive?</div>
+											<p class="survey_results_question_data">18 out of 36 ppl agree</p>
+										</li>
+										<li class="survey_question_data_li">
+											<div class="survey_results_question_text">Doesn't seem interesting?</div>
+											<p class="survey_results_question_data">6 out of 36 ppl agree</p>
+										</li>
+									</ol>
+									<div class="survey_results_comments_header">Comments: 3 out of 36 ppl</div>
+									<ol class="survey_results_comments_list">
+										<li class="survey_results_comments_li">
+											<p>This food looks really good but I think it extremely expenssive</p>
+										</li>
+										<li class="survey_results_comments_li">
+											<p>Waaayyy over priced yo!</p>
+										</li>
+									</ol>
+								</li>
+							</ul>
+							<div class="right_sidebar_options_wrapper">
+								<ul class="right_sidebar_options_dd" data-container-type="food" style="display: none;">
+									<li class="right_sidebar_tab_li item" data-survey-tab="2" onclick="revealNewSurveyTab(this)">
+										Create Survey
+									</li>
+									<li class="right_sidebar_tab_li item cancel_survey" data-currently-surveying="True"><!--  this one can be available on both survey tabs but only on the history one if a survey is currently being conducted -->
+										Cancel Survey
+									</li>
+								</ul>
+								<div class="right_sidebar_options_btn" data-container-type="food" onclick="displayOptionsMenu(this)">
+									Options
+								</div>
+							</div>
+						</div>
+						<div class="diagnosis_tab_container" style="display:none;" data-survey-tab="2">
+							<div id="survey_type_wrap" class="survey_wrapper">
+								<div>Survey People if they are:</div>
+								<span id="if_interested_wrapper">
+									<input type="radio" id="if_interested_input" name="survey_type" value="1"></input>
+									<label class="audience_option" for="if_interested_input">Interested</label>
+								</span>
+								<span id="if_not_interested_wrapper">
+									<input type="radio" id="if_not_interested_input" name="survey_type" value="2"></input>
+									<label class="audience_option" for="if_not_interested_input" data-audience="2">Not Interested</label>
+								</span>
+							</div>
+							<div id="feedback_message_wrapper" class="survey_wrapper">
+								<label>Message</label>
+								<textarea id="feedback_message_textarea" placeholder="Hello valued guest! We have noticed that many people have not been interested in a food you recently observed and we were wondering if you could provide us with some feedback so that we may improve the quality of the foods that we offer?"></textarea>
+							</div>
+							<div id="feedback_Qs_wrapper">
+								<label>Feedback Questions</label>
+								<ul id="feedback_Qs_list">
+									<li class="feedback_Q_li">
+										<input type="text" class="feedback_Q_input"></input>
+										<span class="remove_Q" onclick="deleteFeedbackQuestion(this)">X</span>
+									</li>
+								</ul>
+								<div id="new_feedback_Q" onclick="createNewFeedbackQuestion()">+ New Question</div>
+							</div>
+							<div id="enable_custom_comments" class="performance_inputs">
+								<label for="custom_comments" >Enable Custom Comments</label>
+								<input id="custom_comments" type="checkbox" ></input>
+							</div>
+							<div class="right_sidebar_options_wrapper">
+								<ul class="right_sidebar_options_dd" data-container-type="food" style="display: none;">
+									<li class="right_sidebar_tab_li item" >
+										Launch Survey
+									</li>
+									<li class="right_sidebar_tab_li item cancey_survey" data-survey-tab="1" onclick="revealNewSurveyTab(this)">
+										Cancel Survey
+									</li>
+								</ul>
+								<div class="right_sidebar_options_btn" data-container-type="food" onclick="displayOptionsMenu(this)">
+									Options
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="left_sidebar_wrapper">
+				<span id="left_sidebar_tabs_wrapper">
+					<span class="left_sidebar_tab_header tab_selected" data-tab-number="1" data-tab-className="left_sidebar_tab_wrapper" onclick="selectRightAndLeftSidebarTabs(this)">Categories</span>
+					<span class="left_sidebar_tab_header" data-tab-number="2" data-tab-className="left_sidebar_tab_wrapper" onclick="selectRightAndLeftSidebarTabs(this)">Item Filters</span>
+				</span>
+				<!-- There should probably also be a search feature but I'll put that in later  -->
+				<div class="left_sidebar_tab_wrapper" data-tab-number="1">
+					<ul id="menu_categories_list" class="left_sidebar_tab_list">
+						<li class="left_sidebar_tab_li item category" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Appetizers</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Salads</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Soups</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Plates</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Sandwiches</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Wraps</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Beverages</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Desserts</span>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="menu_icon_container">
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							  	<div class="pseudo_content"></div>
+							</div>
+							<span class="category_name">Wings</span>
+						</li>
+					</ul>
+					<div id="new_category_btn" onclick="createNewMenuCategory()"> + New Category</div>
+				</div>
+				<div class="left_sidebar_tab_wrapper" data-tab-number="2" style="display:none;">
+					<ul class="left_sidebar_tab_list">
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="hover_select_indicator">
+								<span class="filter_name">Foods Getting Surveyed</span>
+							</div>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="hover_select_indicator">
+								<span class="filter_name">Best Performers First</span>
+							</div>
+						</li>
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)">
+							<div class="hover_select_indicator">
+								<span class="filter_name">Worst Performers First</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="category_content_display">
+				<div id="category_content_wrapper">
+					<ul id="category_content_list">
+						<li class="food_entry" onclick="selectFoodObject(this)">
+							<img src="images/chicken_wings_hot.jpg">
+							<div class="food_info_wrap">
+								<span class="food_entry_name">Food Name</span>
+								<span class="food_entry_price">$12</span>
+								<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>
+							</div>
+						</li>
+						<li class="food_entry" onclick="selectFoodObject(this)">
+							<img src="images/chicken_wings_bbq.jpg">
+							<div class="food_info_wrap">
+								<span class="food_entry_name">Food Name</span>
+								<span class="food_entry_price">$11</span>
+								<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>
+							</div>
+						</li>
+						<li class="food_entry" onclick="selectFoodObject(this)">
+							<img src="images/chicken_wings_bbq.jpg">
+							<div class="food_info_wrap">
+								<span class="food_entry_name">Food Name</span>
+								<span class="food_entry_price">$11</span>
+								<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>
+							</div>
+						</li>
+						<li class="food_entry" onclick="selectFoodObject(this)">
+							<img src="images/chicken_wings_bbq.jpg">
+							<div class="food_info_wrap">
+								<span class="food_entry_name">Food Name</span>
+								<span class="food_entry_price">$11</span>
+								<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>
+							</div>
+						</li>
+						<li class="food_entry" onclick="selectFoodObject(this)">
+							<img src="images/chicken_wings_hot.jpg">
+							<div class="food_info_wrap">
+								<span class="food_entry_name">Food Name</span>
+								<span class="food_entry_price">$12</span>
+								<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>
+							</div>
+						</li>
+						<li class="food_entry" onclick="selectFoodObject(this)">
+							<img src="images/chicken_wings_bbq.jpg">
+							<div class="food_info_wrap">
+								<span class="food_entry_name">Food Name</span>
+								<span class="food_entry_price">$11</span>
+								<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
