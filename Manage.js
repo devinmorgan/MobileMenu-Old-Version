@@ -411,6 +411,92 @@
 			makeLineWithDataPoints(data_list);
 	}
 
+// Drag and Drop to reOrganize Categories
+	function dragstart (ev) 
+	{
+		if (ev.currentTarget.parentElement.id == "menu_categories_list")
+		{
+			indexListItemsOfList(ev.currentTarget.parentElement);
+		}
+
+		ev.dataTransfer.effectAllowed = "move";
+		ev.dataTransfer.setData("src_position", ev.currentTarget.getAttribute("data-list-index"));
+		ev.dataTransfer.setDragImage(ev.currentTarget, 0, 0);
+	}
+
+	function dragover(ev)
+	{
+		
+		ev.preventDefault();
+	}
+		
+		function indexListItemsOfList(list_element)
+		{
+			var list_items = list_element.getElementsByTagName("li");
+
+			for (var i = 0; i < list_items.length; i++)
+			{
+				// get the list item in the list and its position in the list
+					var element = list_items[i];
+					var element_position = getElementIndex(element);
+
+				// assign the li's data-list-index attribute the value of its current position
+					element.setAttribute("data-list-index",element_position);
+			}
+		}
+		function insertAfter(newNode, referenceNode)
+		{
+		    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+		}
+	function drop(ev)
+	{
+		var src_position = ev.dataTransfer.getData("src_position");
+		var target_position = ev.currentTarget.getAttribute("data-list-index");
+
+		var srcObject;
+		var parent_list = ev.currentTarget.parentElement;
+
+
+		var li_in_parent_list = parent_list.getElementsByTagName("li");
+		for (var i = 0; i < li_in_parent_list.length; i++)
+		{
+			var list_item = li_in_parent_list[i];
+			if (list_item.getAttribute("data-list-index") == src_position)
+			{
+				srcObject = list_item;
+				break;
+			}
+		}
+
+		if (src_position == target_position)
+		{
+			// pass, its the same element
+		}
+		else if (src_position > target_position)
+		{
+			//moving an item from further down the list upwards--->insertBefore
+			parent_list.insertBefore(srcObject, ev.currentTarget);
+
+		}
+		else
+		{
+			// src_position < target_position so moving item from further up the list downwards --->insertAfter
+			insertAfter(srcObject, ev.currentTarget);
+
+		}
+		
+	}
+
+	function dragend(ev)
+	{
+		ev.dataTransfer.clearData("src_position");
+
+		if (ev.currentTarget.parentElement.id == "menu_categories_list")
+		{
+			indexListItemsOfList(ev.currentTarget.parentElement);
+		}
+	  
+	}
 
 
 
