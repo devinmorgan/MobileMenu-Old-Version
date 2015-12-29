@@ -2,6 +2,9 @@
 //========Visual and Aesthetic Functions==========//
 //=================================================//
 
+// GLOBAL VARIABLES
+	var phpFile = "Manage.php"
+
 //EVENT LISTENERS
 	document.addEventListener('click', function(e){
 		e = e || window.event;
@@ -58,7 +61,6 @@
 				menu_category_items[i].className = "left_sidebar_tab_li item item_selected";
 				if (hasClass(menu_category_items[i].getElementsByTagName("span")[0],"category_name"))
 				{
-					// showRightSidebarElements();
 					populatRightSidebarWithCategoryInfo(element);
 				}
 				else
@@ -122,21 +124,35 @@
 // creating new food AND category functions
 	function createNewMenuCategory()
 	{
-		var categories_list = document.getElementById("menu_categories_list");
-		
-		new_category_item =document.createElement("li");
-		new_category_item.className = "left_sidebar_tab_li item";
-		new_category_item.setAttribute("onclick","selectCategory(this)");
-		new_category_item.innerHTML = 	'<div class="menu_icon_container">'+
-									  		'<div class="pseudo_content"></div>'+
-										  	'<div class="pseudo_content"></div>'+
-										  	'<div class="pseudo_content"></div>'+
-										  	'<div class="pseudo_content"></div>'+
-										  	'<div class="pseudo_content"></div>'+
-										'</div>'+
-										'<span class="category_name">Untitled Category</span>';
-		categories_list.appendChild(new_category_item);
-		new_category_item.click();
+		// create the HTML element for the new food category
+			new_category_item =document.createElement("li");
+
+			new_category_item.className = "left_sidebar_tab_li item";
+			new_category_item.setAttribute("onclick","selectCategory(this)");
+			new_category_item.setAttribute("draggable","true");
+			new_category_item.setAttribute("ondragstart","dragstart(event)");
+			new_category_item.setAttribute("ondragend","dragend(event)");
+			new_category_item.setAttribute("ondragover","dragover(event)");
+			new_category_item.setAttribute("ondragenter","dragenter(event)");
+			new_category_item.setAttribute("ondragleave","dragleave(event)");
+
+			// the empty data value indicates it has no corresponding entry
+			// in the database
+				new_category_item.setAttribute("data-category-identifier=","");
+
+
+			new_category_item.innerHTML = 	'<div class="menu_icon_container">'+
+										  		'<div class="pseudo_content"></div>'+
+											  	'<div class="pseudo_content"></div>'+
+											  	'<div class="pseudo_content"></div>'+
+											  	'<div class="pseudo_content"></div>'+
+											  	'<div class="pseudo_content"></div>'+
+											'</div>'+
+											'<span class="category_name">Untitled Category</span>';
+
+			var categories_list = document.getElementById("menu_categories_list");
+			categories_list.appendChild(new_category_item);
+			new_category_item.click();
 
 	}
 	function createNewFoodItem()
@@ -255,12 +271,42 @@
 			var categories_list = document.getElementById("menu_categories_list");
 			var category_to_save_index = document.getElementById("right_sidebar_header").getAttribute("data-category-index");
 			var category_li = categories_list.getElementsByTagName("li")[category_to_save_index];
-			var category_name_span = category_li.getElementsByTagName("span")[0]
 
 		// change the title of the list item in the category list (menu_categories_list)
+			var category_name_span = category_li.getElementsByTagName("span")[0]
 			category_name_span.innerHTML = extractInfoFromRightSidebar("category")["title"];
+			category_li.click();
 
-		category_li.click();
+		// update the database with new info
+			var category_name = returnFoodOrCategoryElementForClass("title","category").value;
+			var default_description = returnFoodOrCategoryElementForClass("right_sidebar_textarea","category").value;
+			var default_price = returnFoodOrCategoryElementForClass("price","category").value;
+			var start_time = returnFoodOrCategoryElementForClass("from_time","category").value;
+			var end_time = returnFoodOrCategoryElementForClass("until_time","category").value;
+			var default_type = returnFoodOrCategoryElementForClass("food_type_select","category").value;
+			var category_identifier = category_li.getAttribute("data-category-identifier");
+			var menu_position = getElementIndex(category_li);
+
+			var category_object = {
+				"category_name":category_name,
+				"default_description":default_description,
+				"default_price":default_price,
+				"start_time":start_time,
+				"end_time":end_time,
+				"default_type":default_type,
+				"category_identifier":category_identifier,
+				"menu_position":menu_position
+			};
+
+			function helloWorld(result) {
+				category_li.setAttribute("data-category-identifier",result.substring(0,10));
+				alert(result);
+			}
+
+			var action = 1;
+			ajax(action,category_object,helloWorld);
+
+	
 	}
 	function saveFoodItem()
 	{
@@ -424,9 +470,18 @@
 		ev.dataTransfer.setDragImage(ev.currentTarget, 0, 0);
 	}
 
+	function dragenter(ev)
+	{
+		ev.currentTarget.className = "left_sidebar_tab_li item drag_over";
+	}
+
+	function dragleave(ev) 
+	{
+		ev.currentTarget.className = "left_sidebar_tab_li item";
+	}
+
 	function dragover(ev)
 	{
-		
 		ev.preventDefault();
 	}
 		
@@ -453,37 +508,19 @@
 		var src_position = ev.dataTransfer.getData("src_position");
 		var target_position = ev.currentTarget.getAttribute("data-list-index");
 
-		var srcObject;
+		var srcObject = document.querySelectorAll("li[data-list-index='"+src_position+"']")[0];
 		var parent_list = ev.currentTarget.parentElement;
-
-
-		var li_in_parent_list = parent_list.getElementsByTagName("li");
-		for (var i = 0; i < li_in_parent_list.length; i++)
-		{
-			var list_item = li_in_parent_list[i];
-			if (list_item.getAttribute("data-list-index") == src_position)
-			{
-				srcObject = list_item;
-				break;
-			}
-		}
 
 		if (src_position == target_position)
 		{
 			// pass, its the same element
 		}
-		else if (src_position > target_position)
-		{
-			//moving an item from further down the list upwards--->insertBefore
-			parent_list.insertBefore(srcObject, ev.currentTarget);
-
-		}
 		else
 		{
-			// src_position < target_position so moving item from further up the list downwards --->insertAfter
-			insertAfter(srcObject, ev.currentTarget);
-
+			parent_list.insertBefore(srcObject, ev.currentTarget);
 		}
+		
+		unselectEveryThing();
 		
 	}
 
@@ -556,9 +593,53 @@
 		}
 	}
 
+	function ajax(action,data,postAjaxFunction)
+	{
+		if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                // return any data sent back here
+                postAjaxFunction(xmlhttp.responseText);
+            }
+        };
+
+        var JSON_object = {
+        	"action":action,
+        	"data":data
+        }
+
+        xmlhttp.open("POST",phpFile,true);
+		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		xmlhttp.send(JSON.stringify(JSON_object));
+	}
+
+	function unselectEveryThing()
+	{
+		// remove all the drag_over class from the category li that was hovered over
+			var still_highlighted_categories = document.getElementsByClassName("drag_over");
+			if (still_highlighted_categories.length != 0)
+			{
+				still_highlighted_categories[0].className = "left_sidebar_tab_li item";
+			}
+
+			var still_highlighted_foods = document.getElementsByClassName("food_selected");
+			if (still_highlighted_foods.length != 0)
+			{
+				still_highlighted_foods[0].className = "food_entry";
+			}
+
+		// reset the right sidebar to blank
+			hideRightSidebarElements();
+	}
 
 
-
+	
 
 
 

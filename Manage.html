@@ -32,21 +32,63 @@
 					</div>
 					<div class="label_field_wrapper">
 						<label class="right_sidebar_label">Default Time</label>
-						<select class="time_served_select from_time" data-container-type="category">
-							<option value="">--From--</option>
-						</select>
 						<select class="time_served_select until_time" data-container-type="category">
+							<option value="">--From--</option>
+							<option value="6">6 a.m.</option>
+							<option value="7">7 a.m.</option>
+							<option value="8">8 a.m.</option>
+							<option value="9">9 a.m.</option>
+							<option value="10">10 a.m.</option>
+							<option value="11">11 a.m.</option>
+							<option value="12">12 a.m.</option>
+							<option value="13">1 p.m.</option>
+							<option value="14">2 p.m.</option>
+							<option value="15">3 p.m.</option>
+							<option value="16">4 p.m.</option>
+							<option value="17">5 p.m.</option>
+							<option value="18">6 p.m.</option>
+							<option value="19">7 p.m.</option>
+							<option value="20">8 p.m.</option>
+							<option value="21">9 p.m.</option>
+							<option value="22">10 p.m.</option>
+							<option value="23">11 p.m.</option>
+							<option value="24">12 a.m.</option>
+							<option value="1">1 a.m.</option>
+							<option value="2">2 a.m.</option>
+						</select>
+						<select class="time_served_select from_time" data-container-type="category">
 							<option value="">--Until--</option>
+							<option value="6">6 a.m.</option>
+							<option value="7">7 a.m.</option>
+							<option value="8">8 a.m.</option>
+							<option value="9">9 a.m.</option>
+							<option value="10">10 a.m.</option>
+							<option value="11">11 a.m.</option>
+							<option value="12">12 a.m.</option>
+							<option value="13">1 p.m.</option>
+							<option value="14">2 p.m.</option>
+							<option value="15">3 p.m.</option>
+							<option value="16">4 p.m.</option>
+							<option value="17">5 p.m.</option>
+							<option value="18">6 p.m.</option>
+							<option value="19">7 p.m.</option>
+							<option value="20">8 p.m.</option>
+							<option value="21">9 p.m.</option>
+							<option value="22">10 p.m.</option>
+							<option value="23">11 p.m.</option>
+							<option value="24">12 a.m.</option>
+							<option value="1">1 a.m.</option>
+							<option value="2">2 a.m.</option>
 						</select>
 					</div>
 					<div class="label_field_wrapper">
 						<label class="right_sidebar_label">Default Type</label>
 						<select class="food_type_select" data-container-type="category">
 							<option value="">--Choose a type--</option>
-							<option value="drink">Drink</option>
-							<option value="starter">Starter</option>
-							<option value="main">Main</option>
-							<option value="finisher">Finisher</option>
+							<option value="1">Drink</option>
+							<option value="2">Starter</option>
+							<option value="3">Main</option>
+							<option value="4">Finisher</option>
 						</select>
 					</div>
 					<ul class="right_sidebar_options_dd" data-container-type="category" style="display: none;">
@@ -267,7 +309,7 @@
 				<!-- There should probably also be a search feature but I'll put that in later  -->
 				<div class="left_sidebar_tab_wrapper" data-tab-number="1">
 					<ul id="menu_categories_list" class="left_sidebar_tab_list">
-						<li class="left_sidebar_tab_li item category" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
+						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)" ondragenter="dragenter(event)" ondragleave="dragleave(event)" data-category-identifier="">
 							<div class="menu_icon_container">
 							  	<div class="pseudo_content"></div>
 							  	<div class="pseudo_content"></div>
@@ -276,86 +318,6 @@
 							  	<div class="pseudo_content"></div>
 							</div>
 							<span class="category_name">Appetizers</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Salads</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Soups</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Plates</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Sandwiches</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Wraps</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Beverages</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Desserts</span>
-						</li>
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Wings</span>
 						</li>
 					</ul>
 					<div id="new_category_btn" onclick="createNewMenuCategory()"> + New Category</div>
