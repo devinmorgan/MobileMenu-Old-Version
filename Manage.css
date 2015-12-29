@@ -586,7 +586,7 @@
 
 /*All attributes that have the highest priority go here (e.g. item selected)*/
 .drag_over{
-    border-top: 2px solid rgb(31, 127, 189);
+    border-top: 1px solid rgb(209, 72, 54);
 }
 .item{
 	border-left: 5px solid transparent;

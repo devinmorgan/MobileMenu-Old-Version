@@ -51,30 +51,19 @@ switch ($action) {
 						WHERE category_identifier = :category_identifier";
 				}
 
-				// prepare statement for sql_query since we have new category
+				// prepare statement for sql_query 
 					$statement = $connection->prepare($sql_query);
 
 				// bind parameters to statement
 					$statement->bindParam(':category_identifier', $category_identifier);
-					$statement->bindParam(':restaurant_identifier', $restaurant_identifier);
-					$statement->bindParam(':menu_position', $menu_position);
-					$statement->bindParam(':category_name', $category_name);
-					$statement->bindParam(':default_description', $default_description);
-					$statement->bindParam(':default_price', $default_price);
-					$statement->bindParam(':start_time', $start_time);
-					$statement->bindParam(':end_time', $end_time);
+					$statement->bindParam(':restaurant_identifier', $_SESSION['restaurant_identifier']);
+					$statement->bindParam(':menu_position', $data['menu_position']);
+					$statement->bindParam(':category_name', $data['category_name']);
+					$statement->bindParam(':default_description', $data['default_description']);
+					$statement->bindParam(':default_price', $data['default_price']);
+					$statement->bindParam(':start_time', $data['start_time']);
+					$statement->bindParam(':end_time', $data['end_time']);
 					$statement->bindParam(':default_type', $default_type);
-
-
-				// make variables for each $data[] values
-					$restaurant_identifier = $_SESSION['restaurant_identifier'];
-					$menu_position = $data['menu_position'];
-					$category_name = $data['category_name'];
-					$default_description = $data['default_description'];
-					$default_price = $data['default_price'];
-					$start_time = 60*$data['start_time'];
-					$end_time = 60*$data['end_time'];
-					$default_type = $data['default_type'];
 
 				// execute query
 					$statement->execute();
@@ -86,7 +75,52 @@ switch ($action) {
 			}
 
 			$connection = null;
+
 		break;
+
+	case 2: // load all menu categories
+			try {
+				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+
+				// set the PDO error mode to exception
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);				
+
+				$sql_query = "SELECT category_identifier, category_name, menu_position FROM food_categories
+				WHERE restaurant_identifier = :restaurant_identifier ORDER BY menu_position ASC";
+
+				// prepare statement for $sql_query
+					$statement = $connection->prepare($sql_query);
+
+				// bind parameters to statement
+					$statement->bindParam(':restaurant_identifier', $_SESSION['restaurant_identifier']);
+
+				$statement->setFetchMode(PDO::FETCH_ASSOC);
+				$statement->execute();
+				
+
+				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
+
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
+
+		break;
+
+	case 3: // updates the database with each category's menu_position
+			try {
+				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+
+				// set the PDO error mode to exception
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
 	
 	default:
 		# code...
@@ -108,30 +142,19 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -33,7 +33,7 @@
 					<div class="label_field_wrapper">
 						<label class="right_sidebar_label">Default Time</label>
 						<select class="time_served_select until_time" data-container-type="category">
-							<option value="">--From--</option>
+							<option value="">--Until--</option>
 							<option value="6">6 a.m.</option>
 							<option value="7">7 a.m.</option>
 							<option value="8">8 a.m.</option>
@@ -57,7 +57,7 @@
 							<option value="2">2 a.m.</option>
 						</select>
 						<select class="time_served_select from_time" data-container-type="category">
-							<option value="">--Until--</option>
+							<option value="">--From--</option>
 							<option value="6">6 a.m.</option>
 							<option value="7">7 a.m.</option>
 							<option value="8">8 a.m.</option>
@@ -309,16 +309,7 @@
 				<!-- There should probably also be a search feature but I'll put that in later  -->
 				<div class="left_sidebar_tab_wrapper" data-tab-number="1">
 					<ul id="menu_categories_list" class="left_sidebar_tab_list">
-						<li class="left_sidebar_tab_li item" onclick="selectCategory(this)" draggable="true" ondragstart="dragstart(event)" ondragend="dragend(event)" ondragover="dragover(event)" ondrop="drop(event)" ondragenter="dragenter(event)" ondragleave="dragleave(event)" data-category-identifier="">
-							<div class="menu_icon_container">
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							  	<div class="pseudo_content"></div>
-							</div>
-							<span class="category_name">Appetizers</span>
-						</li>
+						<!-- list of Restaurant Menu's Categories -->
 					</ul>
 					<div id="new_category_btn" onclick="createNewMenuCategory()"> + New Category</div>
 				</div>
