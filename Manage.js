@@ -201,21 +201,52 @@
 			}
 	}
 
-	function createNewFoodItem()
+	function createNewFoodItem(food_identifier)
 	{
-		var food_items_list = document.getElementById("category_content_list");
-		
-		new_food_item =document.createElement("li");
-		new_food_item.className = "food_entry item";
-		new_food_item.setAttribute("onclick","selectFoodObject(this)");
-		new_food_item.innerHTML = 	'<img src="images/chicken_wings_hot.jpg">'+
-									'<div class="food_info_wrap">'+
-										'<span class="food_entry_name">Food Name</span>'+
-										'<span class="food_entry_price">$12</span>'+
-										'<p class="food_entry_description">This is the descroption of the food. It will go here for the manager to see</p>'+
-									'</div>';
-		food_items_list.appendChild(new_food_item);
-		new_food_item.click();
+		// pass the food_identifier. If it is passed, look up the food in food_categories and
+		// collect its data and then populated the food item. If the food_identifer is not passed,
+		// look up the selected category (it will be the food's category) in food_categories and populate
+		// the new food li accordingly
+
+		var data_object = {};
+		// food already exists so go to food_items database with food_identifier
+			if (food_identifier === "undefined") {
+				data_object = {"table":"food_items", "food_identifier":food_identifier};
+			}
+		// food is a NEW food so go to food_categories database with category_identifier
+			else {
+				var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
+				var category_identifier = category_li.getAttribute("data-category-identifier");
+
+				data_object = {"table":"food_categories", "category_identifier":category_identifier};
+			}
+
+		function responseFunction(result) {
+			alert(result);
+			// create the food item li for the category_content_list (the main feed)
+				new_food_item =document.createElement("li");
+
+			// give the food item the appropriate attributes
+				new_food_item.className = "food_entry item";
+				new_food_item.setAttribute("onclick","selectFoodObject(this)");
+				new_food_item.setAttribute("data-food-identifier",food_identifier);
+
+			new_food_item.innerHTML = 	'<img src="'+ result[0]["photo_src"] +'" alt="'+ result[0]["food_name"] +'">'+
+										'<div class="food_info_wrap">'+
+											'<span class="food_entry_name">'+ result[0]["food_name"] +'</span>'+
+											'<span class="food_entry_price">'+ result[0]["food_price"] +'</span>'+
+											'<p class="food_entry_description">'+ result[0]["food_description"] +'</p>'+
+										'</div>';
+
+			var food_items_list = document.getElementById("category_content_list");
+			food_items_list.appendChild(new_food_item);
+			new_food_item.click();
+
+		}
+
+		var action = 6;
+		ajax(action,data_object,responseFunction,"createNewFoodItem");
+
 	}
 	function createNewFeedbackQuestion()
 	{

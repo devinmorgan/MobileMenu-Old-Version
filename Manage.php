@@ -194,6 +194,51 @@ switch ($action) {
 
 			$connection = null;
 		break;
+
+	case 6: // create a new food for the provided category
+			try {
+
+				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+
+				// set the PDO error mode to exception
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				// applies to NEW foods that have not been saved in database
+					if ($data["food_identifier"] == "") {
+						$food_identifier = $data["food_identifier"];
+
+						$sql_query = "SELECT default_description, default_price, default_type 
+						FROM food_categories WHERE category_identifier = :category_identifier";
+
+					}
+				// applies to foods that have already been saved in database
+					else {
+						$category_identifier = $data["category_identifier"];
+					}
+
+
+
+
+
+
+				// prepare statement for $sql_query
+					$statement = $connection->prepare($sql_query);
+
+				// bind parameters to statement
+					$statement->bindParam(':category_identifier', $data["category_identifier"]);
+
+				$statement->setFetchMode(PDO::FETCH_ASSOC);
+				$statement->execute();
+		
+				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
+
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
+		break;
 	
 	default:
 		# code...
