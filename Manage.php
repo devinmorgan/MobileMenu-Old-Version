@@ -49,10 +49,8 @@ switch ($action) {
 						WHERE category_identifier = :category_identifier";
 				}
 
-				// prepare statement for sql_query 
+				/// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
-
-				// bind parameters to statement
 					$statement->bindParam(':category_identifier', $category_identifier);
 					$statement->bindParam(':restaurant_identifier', $_SESSION['restaurant_identifier']);
 					$statement->bindParam(':menu_position', $data['menu_position']);
@@ -85,17 +83,14 @@ switch ($action) {
 				$sql_query = "SELECT category_identifier, category_name, menu_position FROM food_categories
 				WHERE restaurant_identifier = :restaurant_identifier ORDER BY menu_position ASC";
 
-				// prepare statement for $sql_query
+				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
-
-				// bind parameters to statement
 					$statement->bindParam(':restaurant_identifier', $_SESSION['restaurant_identifier']);
 
 				$statement->setFetchMode(PDO::FETCH_ASSOC);
 				$statement->execute();
 		
 				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
-
 			}
 			catch(PDOException $exception) {
 				echo $sql_query . "<br>" . $exception->getMessage();
@@ -114,10 +109,8 @@ switch ($action) {
 				$sql_query = "UPDATE food_categories SET menu_position = :menu_position
 				WHERE category_identifier = :category_identifier";
 
-				// prepare statement for $sql_query
+				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
-
-				// bind parameters to statement
 					$statement->bindParam(':menu_position',$menu_position);
 					$statement->bindParam(':category_identifier',$category_identifier);
 
@@ -127,8 +120,6 @@ switch ($action) {
 
 					$statement->execute();
 				}
-
-
 			}
 			catch(PDOException $exception) {
 				echo $sql_query . "<br>" . $exception->getMessage();
@@ -147,15 +138,13 @@ switch ($action) {
 				$sql_query = "SELECT category_name, default_description, default_price, start_time,
 				end_time, default_type FROM food_categories WHERE category_identifier = :category_identifier";
 
-				// prepare statement for $sql_query
+				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
-
-				// bind parameters to statement
 					$statement->bindParam(':category_identifier', $data["category_identifier"]);
 
 				$statement->setFetchMode(PDO::FETCH_ASSOC);
 				$statement->execute();
-		
+
 				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
 			}
 			catch(PDOException $exception) {
@@ -174,10 +163,8 @@ switch ($action) {
 
 				$sql_query = "DELETE FROM food_categories WHERE category_identifier = :category_identifier";
 
-				// prepare statement for $sql_query
+				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
-
-				// bind parameters to statement
 					$statement->bindParam(':category_identifier', $data["category_identifier"]);
 
 				$statement->execute();
@@ -205,10 +192,8 @@ switch ($action) {
 						FROM food_categories WHERE category_identifier = :category_identifier";
 						// NOTE: the default photo & name will be provided in js
 
-						// prepare statement for sql_query 
+						// prepare statement for sql_query AND bind parameters
 							$statement = $connection->prepare($sql_query);
-
-						// bind parameters to statement
 							$statement->bindParam(':category_identifier', $data['category_identifier']);
 					}
 				// applies to foods that have already been saved in database
@@ -216,10 +201,8 @@ switch ($action) {
 						$sql_query = "SELECT photo_src, food_name, food_description, food_price
 						FROM food_items WHERE food_identifier = :food_identifier";
 
-						// prepare statement for sql_query 
+						// prepare statement for sql_query AND bind parameters
 							$statement = $connection->prepare($sql_query);
-
-						// bind parameters to statement
 							$statement->bindParam(':food_identifier', $data['food_identifier']);
 					}
 
@@ -227,11 +210,89 @@ switch ($action) {
 				$statement->execute();
 		
 				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
-
 			}
 			catch(PDOException $exception) {
 				echo $sql_query . "<br>" . $exception->getMessage();
 			}
+
+			$connection = null;
+		break;
+
+	case 7: // save a food to the food_items database
+			try {
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				$food_identifier = $data['food_identifier'];
+				$sql_query = "";
+
+				if ($food_identifier == "") {
+					// it is a new food so give it a Unique Id
+						$food_identifier = random_str(10);
+
+					// new food ---> INSERT 
+						$sql_query = "INSERT INTO food_items (food_identifier,
+						category_identifier, photo_src, food_name, food_description, food_price,
+						start_time, end_time, food_type)
+						VALUES (:food_identifier, :category_identifier, :photo_src, :food_name,
+						:food_description, :food_price, :start_time, :end_time, :food_type)";
+				}
+				elseif (strlen($food_identifier) == 10){
+					// existing food ---> UPDATE
+						$sql_query = "UPDATE food_items 
+						SET category_identifier = :category_identifier, photo_src = :photo_src, 
+						food_name = :food_name, food_description = :food_description,
+						food_price = :food_price, start_time = :start_time, end_time = :end_time,
+						food_type = :food_type 
+						WHERE food_identifier = :food_identifier";
+				}
+
+				// prepare statement for sql_query AND bind parameters
+					$statement = $connection->prepare($sql_query);
+					$statement->bindParam(':food_identifier', $food_identifier);
+					$statement->bindParam(':category_identifier', $data['category_identifier']);
+					$statement->bindParam(':photo_src', $data['photo_src']);
+					$statement->bindParam(':food_name', $data['food_name']);
+					$statement->bindParam(':food_description', $data['food_description']);
+					$statement->bindParam(':food_price', $data['food_price']);
+					$statement->bindParam(':start_time', $data['start_time']);
+					$statement->bindParam(':end_time', $data['end_time']);
+					$statement->bindParam(':food_type', $data['food_type']);
+
+				// execute query
+					$statement->execute();
+
+				echo $food_identifier;
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
+		break;
+
+	case 8: // load a categories foods when a category is selected
+			try {
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				$sql_query = "SELECT food_identifier FROM food_items
+				WHERE category_identifier = :category_identifier";
+
+				// prepare statement for sql_query AND bind parameters
+					$statement = $connection->prepare($sql_query);
+					$statement->bindParam(':category_identifier', $data['category_identifier']);
+
+				$statement->setFetchMode(PDO::FETCH_ASSOC);
+				$statement->execute();
+		
+				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
+			}
+			catch(PDOException $exception) {
+					echo $sql_query . "<br>" . $exception->getMessage();
+				}
 
 			$connection = null;
 		break;

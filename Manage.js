@@ -49,7 +49,7 @@
 
 			// category has already been saved and is in the database
 				if (category_identifier !== "") {
-					// category in the database needs to be updated
+					// category in that may database needs to be updated
 						document.getElementById("right_sidebar_header").setAttribute("data-category-identifier",
 						category_identifier);
 
@@ -65,11 +65,15 @@
 								from_time.value = category_dict["start_time"];
 								until_time.value = category_dict["end_time"];
 								type_input.value = category_dict["default_type"];
+
+							// load category's food items after the category data has loaded
+								loadFoodItemsForSelectedCategory();
 						}
 
 					var action = 4;
 					var data_object = {"category_identifier":category_identifier};
 					ajax(action,data_object,responseFunction,"populatRightSidebarWithCategoryInfo");
+
 				}
 			// category is a +New Category; it is not in database
 				else {
@@ -153,6 +157,7 @@
 	}
 
 // creating new food AND category functions
+	// createNewMenuCategory does NOT need to go to the database so it asks for more parameters
 	function createNewMenuCategory(category_name, category_identifier, menu_position)
 	{
 		var categories_list = document.getElementById("menu_categories_list");
@@ -200,7 +205,9 @@
 				new_category_item.click();
 			}
 	}
-
+	// createNewFoodItem DOES need to go to the database since new foods inherit the categories
+	// defaults. So, it is convinient to have it go to the database for all the foods so it
+	// asks for only 1 parameter
 	function createNewFoodItem(food_identifier)
 	{
 		// if food_identifier is passed, then the food is already in database
@@ -232,7 +239,7 @@
 				new_food_item =document.createElement("li");
 
 			// give the food li the appropriate attributes
-				new_food_item.className = "food_entry item";
+				new_food_item.className = "food_entry";
 				new_food_item.setAttribute("onclick","selectFoodObject(this)");
 				new_food_item.setAttribute("data-food-identifier",food_identifier);
 
@@ -242,11 +249,14 @@
 											'<span class="food_entry_price">'+ food_price +'</span>'+
 											'<p class="food_entry_description">'+ food_description +'</p>'+
 										'</div>';
+			// append food item to list
+				var food_items_list = document.getElementById("category_content_list");
+				food_items_list.appendChild(new_food_item);
 
-			var food_items_list = document.getElementById("category_content_list");
-			food_items_list.appendChild(new_food_item);
-			new_food_item.click();
-
+				if (IS_NEW_FOOD)
+				{
+					new_food_item.click();
+				}
 		}
 
 		var action = 6;
@@ -378,13 +388,13 @@
 				"category_identifier":category_identifier,
 				"menu_position":menu_position
 			};
-		// new categories don't have a value for data-category-identifer, this gives them one AND
-		// if the category aready exists, it gives them the same one...
+		
 			function responseFunction(result) {
-				category_li.setAttribute("data-category-identifier",result.substring(0,10));
+				// new categories don't have a value for data-category-identifer, this gives them one AND
+				// if the category aready exists, it gives them the same one...
+					category_li.setAttribute("data-category-identifier",result.substring(0,10));
 				// change the title of the list item in the category list (menu_categories_list)
-					var category_name_span = category_li.getElementsByTagName("span")[0];
-					category_name_span.innerHTML = category_name;
+					category_li.getElementsByTagName("span")[0].innerHTML = category_name;
 					document.getElementById("right_sidebar_header").innerHTML = category_name;
 			}
 
@@ -395,21 +405,55 @@
 	}
 	function saveFoodItem()
 	{
-		var food_items_list = document.getElementById("category_content_list");
-		var food_index = document.getElementById("right_sidebar_header").getAttribute("data-food-index");
-		var food_item_element = food_items_list.getElementsByTagName("li")[food_index];
+		// gets the food li that will be "saved"
+			var food_li = document.querySelectorAll(".food_entry.food_selected")[0];
+		// update the database with new info
+			var food_name = returnFoodOrCategoryElementForClass("title","food").value;
+			var photo_src = document.getElementById("right_sidebar_image_wrapper").
+				getElementsByTagName("img")[0].src;
+			var food_description = returnFoodOrCategoryElementForClass("right_sidebar_textarea","food").value;
+			var food_price = returnFoodOrCategoryElementForClass("price","food").value;
+			var start_time = returnFoodOrCategoryElementForClass("from_time","food").value;
+			var end_time = returnFoodOrCategoryElementForClass("until_time","food").value;
+			var food_type = returnFoodOrCategoryElementForClass("food_type_select","food").value;
+			var food_identifier = food_li.getAttribute("data-food-identifier");
+			var category_identifier = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0].
+				getAttribute("data-category-identifier");
 
-		food_item_dict = extractInfoFromRightSidebar("food");
-		//update database then just call food_item_element.click()
-		food_item_element.getElementsByClassName("food_entry_name")[0].innerHTML = food_item_dict["title"];
-		food_item_element.getElementsByClassName("food_entry_price")[0].innerHTML = food_item_dict["price"];
-		food_item_element.getElementsByClassName("food_entry_description")[0].innerHTML = food_item_dict["description"];
+			var food_object = {
+				"food_name":food_name,
+				"photo_src":photo_src,
+				"food_description":food_description,
+				"food_price":food_price,
+				"start_time":start_time,
+				"end_time":end_time,
+				"food_type":food_type,
+				"food_identifier":food_identifier,
+				"category_identifier":category_identifier
+			};
+
+		function responseFunction(result) {
+			// new foods don't have a value for data-food-identifer, this gives them one AND
+			// if the food aready exists, it gives them the same one...
+				food_li.setAttribute("data-food-identifier",result.substring(0,10));
+
+			// update the attributes of the food li according to what was saved
+				food_li.getElementsByClassName("food_entry_name")[0].innerHTML = food_name;
+				food_li.getElementsByClassName("food_entry_price")[0].innerHTML = food_price;
+				food_li.getElementsByClassName("food_entry_description")[0].innerHTML = food_description;
+				food_li.getElementsByTagName("img")[0].src = photo_src;
+			
+			// update the right sidebar header with new food name
+				document.getElementById("right_sidebar_header").innerHTML = food_name;
+		}
+
+			var action = 7;
+			ajax(action,food_object,responseFunction,"saveFoodItem");
 	}
 
 // Functions to Load items from Database
 	function loadRestaurantCategories() {
 		var action = 2;
-
 		function responseFunction(result) {
 			// the result will be a JSON object of the form {"category name":"category identifer"}
 				categories_list = JSON.parse(result);
@@ -424,6 +468,27 @@
 		}
 
 		ajax(action,{},responseFunction,"loadRestaurantCategories");
+	}
+	function loadFoodItemsForSelectedCategory() {
+		// 1st clear the main food list
+			document.getElementById("category_content_list").innerHTML = "";
+
+		// 2nd get the category_identifier of the currently selected catogry
+			var category_identifier = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0].
+				getAttribute("data-category-identifier");
+			var data_object = {"category_identifier":category_identifier};
+
+		function responseFunction(result) {
+			// the result will be a JSON object of the form {"key":"value"}
+				foods_list = JSON.parse(result);
+
+			for (pointer in foods_list) {
+				createNewFoodItem(foods_list[pointer]['food_identifier']);
+			}
+		}
+
+		var action = 8;
+		ajax(action,data_object,responseFunction,"loadFoodItemsForSelectedCategory");
 	}
 
 // Functions that work with both Category and Food for right_sidebar
@@ -653,10 +718,6 @@
 		}
 	  
 	}
-
-
-
-
 	
 //Generic Helper Functions
 	function hideRightSidebarElements()
@@ -762,7 +823,10 @@
 			}
 
 		// reset the right sidebar to blank
-			hideRightSidebarElements();			
+			hideRightSidebarElements();
+
+		// clear the center food list
+			document.getElementById("category_content_list").innerHTML = "";
 
 	}
 
