@@ -21,10 +21,8 @@ $dbname = "mobile_menu";
 switch ($action) {
 	case 1: // update database when category is saved (existing or new)
 			try {
-
-				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
-				
-				// set the PDO error mode to exception
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				$category_identifier = $data['category_identifier'];
@@ -80,9 +78,8 @@ switch ($action) {
 
 	case 2: // load all menu categories
 			try {
-				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
-
-				// set the PDO error mode to exception
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);				
 
 				$sql_query = "SELECT category_identifier, category_name, menu_position FROM food_categories
@@ -110,9 +107,8 @@ switch ($action) {
 
 	case 3: // updates the database with each category's menu_position
 			try {
-				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
-
-				// set the PDO error mode to exception
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				$sql_query = "UPDATE food_categories SET menu_position = :menu_position
@@ -144,9 +140,8 @@ switch ($action) {
 
 	case 4: // gets necessary data to populate right sidebar with category info
 			try {
-				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
-
-				// set the PDO error mode to exception
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				$sql_query = "SELECT category_name, default_description, default_price, start_time,
@@ -173,9 +168,8 @@ switch ($action) {
 
 	case 5: // deletes a category from the database
 			try {
-				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
-
-				// set the PDO error mode to exception
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 				$sql_query = "DELETE FROM food_categories WHERE category_identifier = :category_identifier";
@@ -198,34 +192,36 @@ switch ($action) {
 	case 6: // create a new food for the provided category
 			try {
 
-				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
-
-				// set the PDO error mode to exception
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				$sql_query = "";
+				$statement;
 
 				// applies to NEW foods that have not been saved in database
 					if ($data["food_identifier"] == "") {
-						$food_identifier = $data["food_identifier"];
-
-						$sql_query = "SELECT default_description, default_price, default_type 
+						$sql_query = "SELECT default_description, default_price 
 						FROM food_categories WHERE category_identifier = :category_identifier";
+						// NOTE: the default photo & name will be provided in js
 
+						// prepare statement for sql_query 
+							$statement = $connection->prepare($sql_query);
+
+						// bind parameters to statement
+							$statement->bindParam(':category_identifier', $data['category_identifier']);
 					}
 				// applies to foods that have already been saved in database
 					else {
-						$category_identifier = $data["category_identifier"];
+						$sql_query = "SELECT photo_src, food_name, food_description, food_price
+						FROM food_items WHERE food_identifier = :food_identifier";
+
+						// prepare statement for sql_query 
+							$statement = $connection->prepare($sql_query);
+
+						// bind parameters to statement
+							$statement->bindParam(':food_identifier', $data['food_identifier']);
 					}
-
-
-
-
-
-
-				// prepare statement for $sql_query
-					$statement = $connection->prepare($sql_query);
-
-				// bind parameters to statement
-					$statement->bindParam(':category_identifier', $data["category_identifier"]);
 
 				$statement->setFetchMode(PDO::FETCH_ASSOC);
 				$statement->execute();

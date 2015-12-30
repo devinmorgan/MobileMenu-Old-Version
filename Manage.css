@@ -216,6 +216,10 @@
     color: rgb(0,0,0);
     min-height: 21px;
 }
+.right_sidebar_tab_wrapper{
+    max-height: 670px;
+    overflow-y: scroll;
+}
 .right_sidebar_tab_header{
 	width: 100px;
     display: inline-block;

@@ -203,39 +203,44 @@
 
 	function createNewFoodItem(food_identifier)
 	{
-		// pass the food_identifier. If it is passed, look up the food in food_categories and
-		// collect its data and then populated the food item. If the food_identifer is not passed,
-		// look up the selected category (it will be the food's category) in food_categories and populate
-		// the new food li accordingly
+		// if food_identifier is passed, then the food is already in database
+		// if it is not passed, then it is a NEW food
+			var IS_NEW_FOOD = (typeof food_identifier === "undefined");
+			food_identifier = IS_NEW_FOOD ? "" : food_identifier;
+			var database_table = IS_NEW_FOOD ? "food_categories" : "food_items";
 
-		var data_object = {};
-		// food already exists so go to food_items database with food_identifier
-			if (food_identifier === "undefined") {
-				data_object = {"table":"food_items", "food_identifier":food_identifier};
-			}
-		// food is a NEW food so go to food_categories database with category_identifier
-			else {
-				var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
-				var category_identifier = category_li.getAttribute("data-category-identifier");
 
-				data_object = {"table":"food_categories", "category_identifier":category_identifier};
-			}
+		var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
+		var category_identifier = category_li.getAttribute("data-category-identifier");
+
+		var data_object = {
+			"food_identifier":food_identifier,
+			"category_identifier":category_identifier,
+			"database_table":database_table
+		};
+
 
 		function responseFunction(result) {
-			alert(result);
+			food_dict = JSON.parse(result);
+			// determine food item's attributes depending on whether it is NEW or not
+				var photo_src = IS_NEW_FOOD ? "http://localhost/MobileMenu/pics/no_image_available.png" : food_dict[0]["photo_src"];
+				var food_name = IS_NEW_FOOD ? "Untitled Food" : food_dict[0]["food_name"];
+				var food_price = IS_NEW_FOOD ? food_dict[0]["default_price"] : food_dict[0]["food_price"];
+				var food_description = IS_NEW_FOOD ? food_dict["0"]["default_description"] : food_dict[0]["food_description"];
+
 			// create the food item li for the category_content_list (the main feed)
 				new_food_item =document.createElement("li");
 
-			// give the food item the appropriate attributes
+			// give the food li the appropriate attributes
 				new_food_item.className = "food_entry item";
 				new_food_item.setAttribute("onclick","selectFoodObject(this)");
 				new_food_item.setAttribute("data-food-identifier",food_identifier);
 
-			new_food_item.innerHTML = 	'<img src="'+ result[0]["photo_src"] +'" alt="'+ result[0]["food_name"] +'">'+
+			new_food_item.innerHTML = 	'<img src='+ photo_src +' alt="Picture of '+ food_name +'">'+
 										'<div class="food_info_wrap">'+
-											'<span class="food_entry_name">'+ result[0]["food_name"] +'</span>'+
-											'<span class="food_entry_price">'+ result[0]["food_price"] +'</span>'+
-											'<p class="food_entry_description">'+ result[0]["food_description"] +'</p>'+
+											'<span class="food_entry_name">'+ food_name +'</span>'+
+											'<span class="food_entry_price">'+ food_price +'</span>'+
+											'<p class="food_entry_description">'+ food_description +'</p>'+
 										'</div>';
 
 			var food_items_list = document.getElementById("category_content_list");
@@ -631,7 +636,6 @@
 				var categories_list = document.querySelectorAll("#menu_categories_list li");
 				var data_object = [];
 				for (var i = 0; i < categories_list.length; i++) {
-					// alert(i);
 					var category_identifier = categories_list[i].getAttribute("data-category-identifier");
 					var menu_position = categories_list[i].getAttribute("data-list-index");
 
@@ -639,10 +643,9 @@
 					"menu_position":menu_position});
 
 				}
-				// alert(data_object[0]["category_identifier"]);
 
 				function responseFunction(result) {
-					// alert(result);
+
 				}
 
 				var action = 3;
