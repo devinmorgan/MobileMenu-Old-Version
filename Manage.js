@@ -18,9 +18,11 @@
 	//call this whereever event.stopPropogation() is used to make sure things disappear when they are clicked outside of
 		function clickedOutside(e,target)
 		{
-			var dd_menu;
-			//Lower HeadBar Functions
-				displayNoneForClass("same_level_dd");
+			// ensures the options drop down menu disappears as necessary
+			if (target.className.indexOf("right_sidebar_options_btn") == -1)
+			{
+				displayNoneForClass("right_sidebar_options_dd");
+			}
 		}
 
 	window.onload = (function (event) {
@@ -250,19 +252,26 @@
 
 
 // deleting food AND category functions
-	function deleteMenuCategory()
-	{
+	function deleteMenuCategory() {
 		// gets the list item that will be deleted
-			var categories_list = document.getElementById("menu_categories_list");
-			var category_to_delete_index = document.getElementById("right_sidebar_header").getAttribute("data-category-index");
-			var category_li = categories_list.getElementsByTagName("li")[category_to_delete_index];
+			var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
 
-		// removes the category from the ul (menu_categories_list)
-			categories_list.removeChild(category_li);
+		var category_identifier = category_li.getAttribute("data-category-identifier");
 
-		// hides the right_sidebar AND hides the dropdown menus
-			hideRightSidebarElements();
-			returnFoodOrCategoryElementForClass("right_sidebar_options_dd","category").style.display = "none";
+		function responseFunction(result) {
+			// removes the category from the menu_categories_list AND re-evaluates menu positions
+				var categories_list = document.getElementById("menu_categories_list");
+				categories_list.removeChild(category_li);
+				indexListItemsOfList(categories_list);
+
+			// hides the right_sidebar
+				hideRightSidebarElements();
+		}
+
+		var data_object = {"category_identifier":category_identifier};
+		var action = 5;
+
+		ajax(action,data_object,responseFunction,"deleteMenuCategory");
 
 	}
 	function deleteFoodItem()
@@ -688,7 +697,7 @@
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 // return any data sent back here
-                alert("AJAX->" + functionName + " says:\n" + xmlhttp.responseText);
+                // alert("AJAX->" + functionName + " says:\n" + xmlhttp.responseText); //uncomment this to debug
                 postAjaxFunction(xmlhttp.responseText);
             }
         };

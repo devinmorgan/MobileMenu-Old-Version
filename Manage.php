@@ -63,7 +63,7 @@ switch ($action) {
 					$statement->bindParam(':default_price', $data['default_price']);
 					$statement->bindParam(':start_time', $data['start_time']);
 					$statement->bindParam(':end_time', $data['end_time']);
-					$statement->bindParam(':default_type', $default_type);
+					$statement->bindParam(':default_type', $data['default_type']);
 
 				// execute query
 					$statement->execute();
@@ -169,6 +169,30 @@ switch ($action) {
 
 			$connection = null;
 
+		break;
+
+	case 5: // deletes a category from the database
+			try {
+				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+
+				// set the PDO error mode to exception
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				$sql_query = "DELETE FROM food_categories WHERE category_identifier = :category_identifier";
+
+				// prepare statement for $sql_query
+					$statement = $connection->prepare($sql_query);
+
+				// bind parameters to statement
+					$statement->bindParam(':category_identifier', $data["category_identifier"]);
+
+				$statement->execute();
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
 		break;
 	
 	default:
