@@ -157,7 +157,6 @@
 	}
 
 // creating new food AND category functions
-	// createNewMenuCategory does NOT need to go to the database so it asks for more parameters
 	function createNewMenuCategory(category_name, category_identifier, menu_position)
 	{
 		var categories_list = document.getElementById("menu_categories_list");
@@ -205,35 +204,26 @@
 				new_category_item.click();
 			}
 	}
-	// createNewFoodItem DOES need to go to the database since new foods inherit the categories
-	// defaults. So, it is convinient to have it go to the database for all the foods so it
-	// asks for only 1 parameter
-	function createNewFoodItem(food_identifier)
+	function createNewFoodItem()
 	{
-		// if food_identifier is passed, then the food is already in database
-		// if it is not passed, then it is a NEW food
-			var IS_NEW_FOOD = (typeof food_identifier === "undefined");
-			food_identifier = IS_NEW_FOOD ? "" : food_identifier;
-			var database_table = IS_NEW_FOOD ? "food_categories" : "food_items";
-
-
+		var food_identifier = "";
 		var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
 		var category_identifier = category_li.getAttribute("data-category-identifier");
 
 		var data_object = {
 			"food_identifier":food_identifier,
 			"category_identifier":category_identifier,
-			"database_table":database_table
+			"database_table":"food_categories"
 		};
 
 
 		function responseFunction(result) {
 			food_dict = JSON.parse(result);
 			// determine food item's attributes depending on whether it is NEW or not
-				var photo_src = IS_NEW_FOOD ? "http://localhost/MobileMenu/pics/no_image_available.png" : food_dict[0]["photo_src"];
-				var food_name = IS_NEW_FOOD ? "Untitled Food" : food_dict[0]["food_name"];
-				var food_price = IS_NEW_FOOD ? food_dict[0]["default_price"] : food_dict[0]["food_price"];
-				var food_description = IS_NEW_FOOD ? food_dict["0"]["default_description"] : food_dict[0]["food_description"];
+				var photo_src = "http://localhost/MobileMenu/pics/no_image_available.png";
+				var food_name = "Untitled Food";
+				var food_price = food_dict[0]["default_price"];
+				var food_description = food_dict["0"]["default_description"];
 
 			// create the food item li for the category_content_list (the main feed)
 				new_food_item =document.createElement("li");
@@ -251,12 +241,8 @@
 										'</div>';
 			// append food item to list
 				var food_items_list = document.getElementById("category_content_list");
-				food_items_list.appendChild(new_food_item);
-
-				if (IS_NEW_FOOD)
-				{
-					new_food_item.click();
-				}
+				food_items_list.insertBefore(new_food_item,food_items_list.firstChild);
+				new_food_item.click();
 		}
 
 		var action = 6;
@@ -322,17 +308,23 @@
 	}
 	function deleteFoodItem()
 	{
-		// gets the list item that will be deleted
-			var food_items_list = document.getElementById("category_content_list");
-			var food_to_delete_index = document.getElementById("right_sidebar_header").getAttribute("data-food-index");
-			var food_li = food_items_list.getElementsByTagName("li")[food_to_delete_index];
+		// gets the list item that will be deleted AND food_identifier
+			var food_li = document.querySelectorAll(".food_entry.food_selected")[0];
+			var food_identifier = food_li.getAttribute("data-food-identifier");
 
-		// removes the category from the ul (menu_categories_list)
-			food_items_list.removeChild(food_li);
+		function responseFunction(result) {
+			alert(result);
+			// removes the category from the ul (menu_categories_list)
+				food_li.parentElement.removeChild(food_li);
+			// resets right sidebar
+				hideRightSidebarElements();
+		}
 
-		// hides the right_sidebar AND hides the dropdown menus
-			hideRightSidebarElements();
-			returnFoodOrCategoryElementForClass("right_sidebar_options_dd","food").style.display = "none";
+		var data_object = {"food_identifier":food_identifier};
+		var action = 9;
+
+		ajax(action,data_object,responseFunction,"deleteFoodItem");
+		
 	}
 	function deleteFeedbackQuestion(element)
 	{
@@ -479,11 +471,33 @@
 			var data_object = {"category_identifier":category_identifier};
 
 		function responseFunction(result) {
-			// the result will be a JSON object of the form {"key":"value"}
+			// the result will be a JSON object of the form {pointer: {dictionary} }
 				foods_list = JSON.parse(result);
-
 			for (pointer in foods_list) {
-				createNewFoodItem(foods_list[pointer]['food_identifier']);
+				// determine food item's attributes depending on whether it is NEW or not
+					var food_identifier = foods_list[pointer]["food_identifier"];
+					var photo_src = foods_list[pointer]["photo_src"];
+					var food_name = foods_list[pointer]["food_name"];
+					var food_price = foods_list[pointer]["food_price"];
+					var food_description = foods_list[pointer]["food_description"];
+				// create the food item li for the category_content_list (the main feed)
+					new_food_item = document.createElement("li");
+
+				// give the food li the appropriate attributes
+					new_food_item.className = "food_entry";
+					new_food_item.setAttribute("onclick","selectFoodObject(this)");
+					new_food_item.setAttribute("data-food-identifier",food_identifier);
+
+				new_food_item.innerHTML = 	'<img src='+ photo_src +' alt="Picture of '+ food_name +'">'+
+											'<div class="food_info_wrap">'+
+												'<span class="food_entry_name">'+ food_name +'</span>'+
+												'<span class="food_entry_price">'+ food_price +'</span>'+
+												'<p class="food_entry_description">'+ food_description +'</p>'+
+											'</div>';
+				// append food item to list
+					document.getElementById("category_content_list").
+						appendChild(new_food_item);
+
 			}
 		}
 
@@ -791,9 +805,10 @@
         }
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                //uncomment this to debug
+                	// alert("AJAX->" + functionName + " says:\n" + xmlhttp.responseText);
                 // return any data sent back here
-                // alert("AJAX->" + functionName + " says:\n" + xmlhttp.responseText); //uncomment this to debug
-                postAjaxFunction(xmlhttp.responseText);
+                	postAjaxFunction(xmlhttp.responseText);
             }
         };
 
