@@ -96,8 +96,7 @@ switch ($action) {
 
 				$statement->setFetchMode(PDO::FETCH_ASSOC);
 				$statement->execute();
-				
-
+		
 				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
 
 			}
@@ -114,13 +113,63 @@ switch ($action) {
 				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 
 				// set the PDO error mode to exception
-					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				$sql_query = "UPDATE food_categories SET menu_position = :menu_position
+				WHERE category_identifier = :category_identifier";
+
+				// prepare statement for $sql_query
+					$statement = $connection->prepare($sql_query);
+
+				// bind parameters to statement
+					$statement->bindParam(':menu_position',$menu_position);
+					$statement->bindParam(':category_identifier',$category_identifier);
+
+				for ($i = 0; $i < sizeof($data); $i++) {
+					$category_identifier = $data[$i]["category_identifier"];
+					$menu_position = $data[$i]["menu_position"];
+
+					$statement->execute();
+				}
+
+
 			}
 			catch(PDOException $exception) {
 				echo $sql_query . "<br>" . $exception->getMessage();
 			}
 
 			$connection = null;
+
+		break;
+
+	case 4: // gets necessary data to populate right sidebar with category info
+			try {
+				$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+
+				// set the PDO error mode to exception
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+				$sql_query = "SELECT category_name, default_description, default_price, start_time,
+				end_time, default_type FROM food_categories WHERE category_identifier = :category_identifier";
+
+				// prepare statement for $sql_query
+					$statement = $connection->prepare($sql_query);
+
+				// bind parameters to statement
+					$statement->bindParam(':category_identifier', $data["category_identifier"]);
+
+				$statement->setFetchMode(PDO::FETCH_ASSOC);
+				$statement->execute();
+		
+				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
+
+		break;
 	
 	default:
 		# code...

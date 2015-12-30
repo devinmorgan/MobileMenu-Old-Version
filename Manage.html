@@ -23,7 +23,7 @@
 						<input type="text" class="right_sidebar_input title" data-container-type="category" placeholder="Category Name"></input>
 					</div>
 					<div class="label_field_wrapper">
-						<label >Default Description</label>
+						<label style="font-weight:100;">Default Description</label>
 						<textarea class="right_sidebar_textarea" data-container-type="category" placeholder="Offer details about subsitions or add-ons available with this category"></textarea>
 					</div>
 					<div class="label_field_wrapper">
@@ -33,7 +33,7 @@
 					<div class="label_field_wrapper">
 						<label class="right_sidebar_label">Default Time</label>
 						<select class="time_served_select until_time" data-container-type="category">
-							<option value="">--Until--</option>
+							<option value="-1">--Until--</option>
 							<option value="6">6 a.m.</option>
 							<option value="7">7 a.m.</option>
 							<option value="8">8 a.m.</option>
@@ -52,12 +52,12 @@
 							<option value="21">9 p.m.</option>
 							<option value="22">10 p.m.</option>
 							<option value="23">11 p.m.</option>
-							<option value="24">12 a.m.</option>
+							<option value="0">12 a.m.</option>
 							<option value="1">1 a.m.</option>
 							<option value="2">2 a.m.</option>
 						</select>
 						<select class="time_served_select from_time" data-container-type="category">
-							<option value="">--From--</option>
+							<option value="-1">--From--</option>
 							<option value="6">6 a.m.</option>
 							<option value="7">7 a.m.</option>
 							<option value="8">8 a.m.</option>
@@ -76,7 +76,7 @@
 							<option value="21">9 p.m.</option>
 							<option value="22">10 p.m.</option>
 							<option value="23">11 p.m.</option>
-							<option value="24">12 a.m.</option>
+							<option value="0">12 a.m.</option>
 							<option value="1">1 a.m.</option>
 							<option value="2">2 a.m.</option>
 						</select>
@@ -84,7 +84,7 @@
 					<div class="label_field_wrapper">
 						<label class="right_sidebar_label">Default Type</label>
 						<select class="food_type_select" data-container-type="category">
-							<option value="">--Choose a type--</option>
+							<option value="-1">--Choose a type--</option>
 							<option value="1">Drink</option>
 							<option value="2">Starter</option>
 							<option value="3">Main</option>

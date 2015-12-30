@@ -34,44 +34,68 @@
 	//helper functions
 		function populatRightSidebarWithCategoryInfo(element)
 		{
-			// get the name and index (from the left_sidebar categoreis list) of the selected category
-				var category_name = element.getElementsByClassName("category_name")[0].innerHTML;
-				var category_index = getElementIndex(element);
+			// get all of the HTML elements that need to be updated
+				var header = document.getElementById("right_sidebar_header");
+				var title_input = returnFoodOrCategoryElementForClass("title","category");
+				var description_textarea = returnFoodOrCategoryElementForClass("right_sidebar_textarea","category");
+				var price_input = returnFoodOrCategoryElementForClass("price","category");
+				var from_time = returnFoodOrCategoryElementForClass("from_time","category");
+				var until_time = returnFoodOrCategoryElementForClass("until_time","category");
+				var type_input = returnFoodOrCategoryElementForClass("food_type_select","category");
 
-			// store the category_index number to remember which element populated the right_sidebar
-				document.getElementById("right_sidebar_header").setAttribute("data-category-index",category_index);
+			var category_identifier = element.getAttribute("data-category-identifier");
 
-			// set the right_sidebar_header to the name of the category
-				document.getElementById("right_sidebar_header").innerHTML = category_name;
-			// set the right_sidebar title input to the name of the category
-				returnFoodOrCategoryElementForClass("title","category").value = category_name
+			// category has already been saved and is in the database
+				if (category_identifier !== "") {
+					// category in the database needs to be updated
+						document.getElementById("right_sidebar_header").setAttribute("data-category-identifier",
+						category_identifier);
+
+					// result is of the form {"category_name":category_name, "default_description":default_description, ...}
+						function responseFunction(result) {
+							category_dict = JSON.parse(result)[0];
+
+							// supply the necessary information to all of the HTML elements
+								header.innerHTML = category_dict["category_name"];
+								title_input.value = category_dict["category_name"];
+								description_textarea.value = category_dict["default_description"];
+								price_input.value = category_dict["default_price"];
+								from_time.value = category_dict["start_time"];
+								until_time.value = category_dict["end_time"];
+								type_input.value = category_dict["default_type"];
+						}
+
+					var action = 4;
+					var data_object = {"category_identifier":category_identifier};
+					ajax(action,data_object,responseFunction,"populatRightSidebarWithCategoryInfo");
+				}
+			// category is a +New Category; it is not in database
+				else {
+					// provide the right sidebar header and the category title input with
+					// the NEW category's default name. This is necessary so that the NEW
+					// category gets saved with a title
+						title_input.value = "Untitled Category";
+						header.innerHTML = "Untitled Category";
+					saveMenuCategory();
+					element.click();
+				}
 
 		}
 
 	function selectCategory(element)
 	{
 
-		var food_container = returnFoodOrCategoryElementForClass("right_sidebar_container","food");
+		unselectEveryThing();
 		var category_container = returnFoodOrCategoryElementForClass("right_sidebar_container","category");
-
-		food_container.style.display = "none";
-		unhighlightFoodItems();
 		category_container.style.display = "block";
 
 		var menu_category_items = document.getElementsByClassName("left_sidebar_tab_li");
 		for (var i = 0; i < menu_category_items.length;i++)
 		{
-			if (menu_category_items[i] == element)
+			if (menu_category_items[i] === element)
 			{
 				menu_category_items[i].className = "left_sidebar_tab_li item item_selected";
-				if (hasClass(menu_category_items[i].getElementsByTagName("span")[0],"category_name"))
-				{
-					populatRightSidebarWithCategoryInfo(element);
-				}
-				else
-				{
-					hideRightSidebarElements();
-				}
+				populatRightSidebarWithCategoryInfo(element);
 			}
 			else
 			{
@@ -137,7 +161,7 @@
 				categories_list.getElementsByTagName("li").length;
 
 		// create the HTML element for the new food category
-			new_category_item =document.createElement("li");
+			new_category_item = document.createElement("li");
 
 		// add relevant attriubtes to the category HTML element
 			new_category_item.className = "left_sidebar_tab_li item";
@@ -287,16 +311,8 @@
 		}
 	function saveMenuCategory()
 	{
-		// gets the list item that will be "saved"
-			var categories_list = document.getElementById("menu_categories_list");
-			var category_to_save_index = document.getElementById("right_sidebar_header").getAttribute("data-category-index");
-			var category_li = categories_list.getElementsByTagName("li")[category_to_save_index];
-
-		// change the title of the list item in the category list (menu_categories_list)
-			var category_name_span = category_li.getElementsByTagName("span")[0]
-			category_name_span.innerHTML = extractInfoFromRightSidebar("category")["title"];
-			category_li.click();
-
+		// gets the category list item that will be "saved"
+			var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
 		// update the database with new info
 			var category_name = returnFoodOrCategoryElementForClass("title","category").value;
 			var default_description = returnFoodOrCategoryElementForClass("right_sidebar_textarea","category").value;
@@ -317,14 +333,18 @@
 				"category_identifier":category_identifier,
 				"menu_position":menu_position
 			};
-
+		// new categories don't have a value for data-category-identifer, this gives them one AND
+		// if the category aready exists, it gives them the same one...
 			function responseFunction(result) {
 				category_li.setAttribute("data-category-identifier",result.substring(0,10));
-				alert(result);
+				// change the title of the list item in the category list (menu_categories_list)
+					var category_name_span = category_li.getElementsByTagName("span")[0];
+					category_name_span.innerHTML = category_name;
+					document.getElementById("right_sidebar_header").innerHTML = category_name;
 			}
 
 			var action = 1;
-			ajax(action,category_object,responseFunction);
+			ajax(action,category_object,responseFunction,"saveMenuCategory");
 
 	
 	}
@@ -358,7 +378,7 @@
 			}
 		}
 
-		ajax(action,{},responseFunction);
+		ajax(action,{},responseFunction,"loadRestaurantCategories");
 	}
 
 // Functions that work with both Category and Food for right_sidebar
@@ -570,21 +590,23 @@
 			// update the database with new values
 				var categories_list = document.querySelectorAll("#menu_categories_list li");
 				var data_object = [];
-				for (li in categories_list) {
-					var category_identifier = li.getAttribute("data-category-identifier");
-					var menu_position = li.getAttribute("data-list-index");
+				for (var i = 0; i < categories_list.length; i++) {
+					// alert(i);
+					var category_identifier = categories_list[i].getAttribute("data-category-identifier");
+					var menu_position = categories_list[i].getAttribute("data-list-index");
 
 					data_object.push({"category_identifier":category_identifier,
 					"menu_position":menu_position});
 
 				}
+				// alert(data_object[0]["category_identifier"]);
 
 				function responseFunction(result) {
-					alert(result);
+					// alert(result);
 				}
 
 				var action = 3;
-				ajax(action,data_object,responseFunction);
+				ajax(action,data_object,responseFunction,"dragend");
 		}
 	  
 	}
@@ -596,7 +618,14 @@
 //Generic Helper Functions
 	function hideRightSidebarElements()
 	{
+		// clear out the inputs in right sidebar category
 		document.getElementById("right_sidebar_header").innerHTML = "";
+			returnFoodOrCategoryElementForClass("title","category").value = ""
+			returnFoodOrCategoryElementForClass("right_sidebar_textarea","category").value = "";
+			returnFoodOrCategoryElementForClass("price","category").value = "";
+			returnFoodOrCategoryElementForClass("from_time","category").value = -1;
+			returnFoodOrCategoryElementForClass("until_time","category").value = -1;
+			returnFoodOrCategoryElementForClass("food_type_select","category").value = -1;
 		displayNoneForClass("right_sidebar_container");
 	}
 	function unhighlightFoodItems()
@@ -647,7 +676,7 @@
 		}
 	}
 
-	function ajax(action,data,postAjaxFunction)
+	function ajax(action,data,postAjaxFunction,functionName)
 	{
 		if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -659,6 +688,7 @@
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 // return any data sent back here
+                alert("AJAX->" + functionName + " says:\n" + xmlhttp.responseText);
                 postAjaxFunction(xmlhttp.responseText);
             }
         };
@@ -689,7 +719,8 @@
 			}
 
 		// reset the right sidebar to blank
-			hideRightSidebarElements();
+			hideRightSidebarElements();			
+
 	}
 
 
