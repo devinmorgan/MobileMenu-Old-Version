@@ -220,7 +220,7 @@
 		function responseFunction(result) {
 			food_dict = JSON.parse(result);
 			// determine food item's attributes depending on whether it is NEW or not
-				var photo_src = "http://localhost/MobileMenu/pics/no_image_available.png";
+				var photo_src = "http://localhost/MobileMenu/Images/no_image_available.png";
 				var food_name = "Untitled Food";
 				var food_price = food_dict[0]["default_price"];
 				var food_description = food_dict["0"]["default_description"];
@@ -732,6 +732,23 @@
 		}
 	  
 	}
+// Functions to help with food photo uploads
+	// this triggers the folder browser once Change Photo is clicked
+		function browsePhotos(element) {
+			element.getElementsByClassName("photo_browse_input")[0].click();
+		}
+	// this submits the form when the user selects a file in their folder browser
+		function submitNewFoodPhoto(element) {
+			element.parentElement.getElementsByClassName("photo_submit_input")[0].
+				click();
+			element.parentElement.getElementsByClassName("photo_browse_input")[0].value = "";
+		}
+	// this sends the file info to the Photo_Uploads.php for processing
+		function uploadPhotoToSever() {
+		    var iFrameBody = document.getElementById('photo_upload_iframe').
+		    	contentDocument.getElementsByTagName('body')[0];
+		    alert(iFrameBody.innerHTML);
+		}
 	
 //Generic Helper Functions
 	function hideRightSidebarElements()

@@ -112,7 +112,7 @@
 					<span class="right_sidebar_tab_header" data-tab-number="3" data-tab-className="right_sidebar_tab_wrapper" onclick="selectRightAndLeftSidebarTabs(this)">Diagnostics</span>
 					<div class="right_sidebar_tab_wrapper" data-tab-number="1">
 						<div id="right_sidebar_image_wrapper">
-							<img src="pics/chicken_wings_hot.jpg">
+							<img src="Images/chicken_wings_hot.jpg">
 						</div>
 						<div class="label_field_wrapper">
 							<label class="right_sidebar_label">Food Title</label>
@@ -188,8 +188,13 @@
 							</select>
 						</div>
 						<ul class="right_sidebar_options_dd" data-container-type="food" style="display: none;">
-							<li class="right_sidebar_tab_li item">
+							<li id="test" class="right_sidebar_tab_li item" onclick="browsePhotos(this)">
 								Change Photo
+								<iframe id="photo_upload_iframe" name="photo_upload_iframe" height="0" width="0" frameborder="0" scrolling="yes" onload="uploadPhotoToSever()"></iframe>
+							    <form id="photo_upload_form" action="Photo_Uploads.php" method="post" enctype="multipart/form-data" target="photo_upload_iframe">
+							        File: <input type="file" name="file_to_upload" class="photo_browse_input" onchange="submitNewFoodPhoto(this)">
+							        <input type="submit" name="submit_file" value="Submit" class="photo_submit_input"/>
+							    </form>
 							</li>
 							<li class="right_sidebar_tab_li item" onclick="saveFoodItem()">
 								Save Food

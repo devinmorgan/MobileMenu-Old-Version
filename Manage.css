@@ -298,6 +298,11 @@
 .right_sidebar_options_btn:hover{
 	cursor: pointer;
 }
+#photo_upload_form{
+    position: fixed;
+    top:-100px;
+    left:-100px; /* if this doesn't work try display none */
+}
 
 /*		begin food performance tab css					*/
 #graph_label{
