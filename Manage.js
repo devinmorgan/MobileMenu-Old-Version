@@ -29,6 +29,8 @@
 		
 		// call any functions necessary to initialize the page onload
 			loadRestaurantCategories();
+		// give iFrame appropriate onload
+			document.getElementById("photo_upload_iframe").onload = uploadPhotoToSever;
 
 	});
 
@@ -313,7 +315,6 @@
 			var food_identifier = food_li.getAttribute("data-food-identifier");
 
 		function responseFunction(result) {
-			alert(result);
 			// removes the category from the ul (menu_categories_list)
 				food_li.parentElement.removeChild(food_li);
 			// resets right sidebar
@@ -747,8 +748,10 @@
 		function uploadPhotoToSever() {
 		    var iFrameBody = document.getElementById('photo_upload_iframe').
 		    	contentDocument.getElementsByTagName('body')[0];
-		    alert(iFrameBody.innerHTML);
+		    var upload_results_data = JSON.parse(iFrameBody.innerHTML);
+		    alert(upload_results_data[0]["file_location"]);
 		}
+
 	
 //Generic Helper Functions
 	function hideRightSidebarElements()
