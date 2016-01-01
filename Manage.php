@@ -301,6 +301,30 @@ switch ($action) {
 
 			$connection = null;
 		break;
+
+	case 10: // saves photo path for a given food item
+			try {
+				//create new PDO and set its error mode to exception
+					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
+					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+					$sql_query = "UPDATE food_items SET photo_src = :photo_src
+					WHERE food_identifier = :food_identifier";
+
+					// prepare statement for sql_query AND bind parameters
+						$statement = $connection->prepare($sql_query);
+						$statement->bindParam(':photo_src', $data['photo_src']);
+						$statement->bindParam(':food_identifier', $data['food_identifier']);
+
+					$statement->execute();
+			}
+			catch(PDOException $exception) {
+				echo $sql_query . "<br>" . $exception->getMessage();
+			}
+
+			$connection = null;
+		break;
+
 	
 	default:
 		# code...

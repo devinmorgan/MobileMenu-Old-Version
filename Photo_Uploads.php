@@ -22,11 +22,11 @@ $error_msg = '';
 	        $upload_success = false;
 	    }
 	}
-// Check if file already exists
-	if (file_exists($file_location)) {
-	    $error_msg .= 'Sorry, file already exists.\n';
-	    $upload_success = false;
-	}
+// // Check if file already exists
+// 	if (file_exists($file_location)) {
+// 	    $error_msg .= 'Sorry, file already exists.\n';
+// 	    $upload_success = false;
+// 	}
 // Check file size
 	if ($_FILES[ $file_type_input_name ]["size"] > 1000000) {
 	    $error_msg .= 'Sorry, your file is too large.\n';
@@ -60,7 +60,7 @@ $error_msg = '';
 	$photo_upload_data["file_size"] = $file_size;
 	$photo_upload_data["error_msg"] = $error_msg;
 
-	echo htmlspecialchars(json_encode(array($photo_upload_data, JSON_FORCE_OBJECT)));
+	echo json_encode(array($photo_upload_data, JSON_FORCE_OBJECT));
 
 
 

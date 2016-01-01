@@ -746,10 +746,31 @@
 		}
 	// this sends the file info to the Photo_Uploads.php for processing
 		function uploadPhotoToSever() {
-		    var iFrameBody = document.getElementById('photo_upload_iframe').
-		    	contentDocument.getElementsByTagName('body')[0];
-		    var upload_results_data = JSON.parse(iFrameBody.innerHTML);
-		    alert(upload_results_data[0]["file_location"]);
+			// 1st get the src for the photo just uploaded
+			    var iFrameBody = document.getElementById('photo_upload_iframe').
+			    	contentDocument.getElementsByTagName('body')[0];
+			    var photo_src = JSON.parse(iFrameBody.innerHTML)[0]["file_location"];
+
+				var food_li = document.querySelectorAll(".food_entry.food_selected")[0];
+				var food_identifier = food_li.getAttribute("data-food-identifier");
+
+				var data_object = {
+					"photo_src":photo_src,
+					"food_identifier":food_identifier
+				};
+
+				function responseFunction(result) {
+					alert(result);
+					// change the photo src of the right sidebar
+						document.getElementById("right_sidebar_image_wrapper").
+							getElementsByTagName("img")[0].src = photo_src;
+					// change the photo src of the food item
+						food_li.getElementsByTagName("img")[0].src = photo_src;
+				}
+
+				var action = 10;
+				ajax(action,data_object,responseFunction,"uploadPhotoToSever");
+
 		}
 
 	
