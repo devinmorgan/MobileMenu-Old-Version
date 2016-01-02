@@ -28,7 +28,7 @@ $error_msg = '';
 // 	    $upload_success = false;
 // 	}
 // Check file size
-	if ($_FILES[ $file_type_input_name ]["size"] > 1000000) {
+	if ($_FILES[ $file_type_input_name ]["size"] > 2000000) {
 	    $error_msg .= 'Sorry, your file is too large.\n';
 	    $upload_success = false;
 	}
