@@ -19,19 +19,11 @@
 				<h3 id="right_sidebar_header">Category Name</h3>
 				<div class="right_sidebar_container" data-container-type="category">
 					<div class="label_field_wrapper">
-						<label class="right_sidebar_label">Category Title</label>
+						<label class="right_sidebar_label">Category Name</label>
 						<input type="text" class="right_sidebar_input title" data-container-type="category" placeholder="Category Name"></input>
 					</div>
 					<div class="label_field_wrapper">
-						<label style="font-weight:100;">Default Description</label>
-						<textarea class="right_sidebar_textarea" data-container-type="category" placeholder="Offer details about subsitions or add-ons available with this category"></textarea>
-					</div>
-					<div class="label_field_wrapper">
-						<label class="right_sidebar_label">Default Price</label>
-						<input type="text" class="right_sidebar_input price" data-container-type="category" placeholder="e.g. $9.99"></input>
-					</div>
-					<div class="label_field_wrapper">
-						<label class="right_sidebar_label">Default Time</label>
+						<label class="right_sidebar_label">Time Served</label>
 						<select class="time_served_select until_time" data-container-type="category">
 							<option value="-1">--Until--</option>
 							<option value="6">6 a.m.</option>
@@ -82,7 +74,7 @@
 						</select>
 					</div>
 					<div class="label_field_wrapper">
-						<label class="right_sidebar_label">Default Type</label>
+						<label class="right_sidebar_label">Food Type</label>
 						<select class="food_type_select" data-container-type="category">
 							<option value="-1">--Choose a type--</option>
 							<option value="1">Drink</option>
@@ -90,6 +82,38 @@
 							<option value="3">Main</option>
 							<option value="4">Finisher</option>
 						</select>
+					</div>
+					<div id="served_with_wrapper">
+					    <div id="served_with_header">Served With</div>
+					    <ul id="instructions_ul">
+					        <li class="instructions_li">
+					          <label class="right_sidebar_li_label">Instruction</label>
+					          <input type="text" class="instruction_input" placeholder="e.g. 'Choose 1 from: '"/>
+					          <span class="remove_right_sidebar_li" onclick=deleteRightSidebarListItem(this)>X</span>
+					            <ul class="options_ul">
+					                <li class="options_li">
+					                    <label class="right_sidebar_li_label">Option</label>
+					                    <input type="text" onkeydown="createNewOptionForInstruction(this)" class="options_input" placeholder="e.g. 'Whole Wheat', 'White', or 'Rye'" />
+					                    <span class="remove_right_sidebar_li" onclick=deleteRightSidebarListItem(this)> X</span>
+					                </li>
+					            </ul>
+					        </li>
+					    </ul>
+					    <div id="new_option_explanation">Press "Enter" inside textbox to create a new Option</div>
+					    <div class="create_new_right_sidebar" onclick="createNewInstructionForServedWith()">+New Served With</div>
+					</div>
+					<div id="upsales_wrapper">
+					    <div id="upsales_header">Extras & Substitutions</div>
+					    <ul id="upsales_ul">
+					        <li class="upsales_li">
+					            <label class="right_sidebar_li_label">Item</label>
+					            <input type="text" class="upsales_item_input" placeholder="e.g. 'Add Steak'"/>
+					            <label class="right_sidebar_li_label">Price</label>
+					            <input type="text" class="upsales_price_input" placeholder="e.g. '+$2.00'"/>
+					            <span class="remove_right_sidebar_li" onclick="deleteRightSidebarListItem(this)">X</span>
+					        </li>
+					    </ul>
+					    <div class="create_new_right_sidebar" onclick="createNewUpsaleItem()">+New Up-Sale</div>
 					</div>
 					<ul class="right_sidebar_options_dd" data-container-type="category" style="display: none;">
 						<li class="right_sidebar_tab_li item" onclick="createNewFoodItem()">

@@ -6,6 +6,10 @@
 	list-style-type: none;
 	color:rgb(100,100,100);
 }
+input {
+    color: rgb(0,0,0);
+    font-size: 13px;
+}
 
 #layout_wrapper{
 	height: 100vh;
@@ -238,7 +242,10 @@
 	margin:2px 5px 10px 13px;
 	cursor: pointer;
 }
-
+.right_sidebar_container{
+    max-height: 700px;
+    overflow-y:scroll;
+}
 #right_sidebar_image_wrapper{
 	padding: 5px 35px;
 	margin-bottom: 15px;
@@ -271,9 +278,9 @@
     resize: vertical;
 }
 .time_served_select{
-	margin: 4px 1px 0px 0px;
+	margin: 3px 7px 0px 0px;
     float: right;
-    width: 105px;
+    width: 100px;
 }
 .food_type_select{
 	float: right;
@@ -305,6 +312,76 @@
     position: fixed;
     top:-100px;
     left:-100px; /* if this doesn't work try display none */
+}
+
+/*                     Right sidbar Served with CSS                  */
+#served_with_wrapper,#upsales_wrapper{
+    margin: 25px 0px 25px 0px;
+}
+#served_with_header,#upsales_header {
+    text-align: center;
+    font-size: 16px;
+    margin: 0px auto 0px auto;
+    padding: 0px 0px 10px 0px;
+}
+#instructions_ul,#upsales_ul{
+    padding: 0px 0px 0px 0px;
+}
+.instructions_li{
+    margin: 0px 0px 10px 20px;
+}
+.right_sidebar_li_label{
+  line-height:25px;
+  font-size:13px;
+  font-weight: 100;
+}
+.instruction_input,.upsales_item_input,.upsales_price_input{
+    line-height: 20px;
+    width: 230px;
+}
+.remove_right_sidebar_li:hover{
+    cursor:pointer;
+}
+.options_ul{
+    padding: 0px 0px 0px 0px;
+}
+.options_li{
+     margin: 0px 0px 0px 20px;
+}
+.options_input {
+    line-height: 20px;
+    width: 214px;
+    margin: 3px 0px 0px 0px;
+}
+#new_option_explanation{
+    font-size:10px;
+    text-align:center;
+}
+.create_new_right_sidebar{
+    width: 320px;
+    border: 1px solid black;
+    margin: 25px 15px 0px 15px;
+    text-align: center;
+    padding: 5px 0px 5px 0px;
+    color: rgb(127, 127, 127);
+    border: 1px solid rgb(200,200,200);
+    font-weight: 100;
+  }
+.create_new_right_sidebar:hover{
+    border: 1px solid rgb(0,0,0);
+    color: rgb(0,0,0);
+    cursor: pointer;
+}
+
+/*                       right Sidebar Extras & Substitutions                 */
+.upsales_li{
+    margin: 3px 0px 0px 20px;
+}
+.upsales_item_input{
+    width:145px;
+}
+.upsales_price_input{
+    width:75px;
 }
 
 /*		begin food performance tab css					*/
