@@ -163,39 +163,42 @@
 }
 
 .food_entry{
-	background-color: rgb(255,255,255);
-    box-shadow: 0px 5px 5px rgb(193, 193, 193);
-    width: 290px;
+	width: 290px;
     display: inline-block;
-    margin: 0px 0px 15px 0px;
-    border: 2px solid transparent;
+    margin: 0px 0px 35px 0px;
+    padding: 0px 0px 0px 0px
 }
 .food_entry img{
-	margin:5px;
-	max-width:280px;
+	max-width:290px;
 	max-height:100%;
 
 }
 .food_info_wrap{
-	height: 75px;
-	width: 280px;
-	margin:0px 5px 0px 5px;
+    padding: 5px 15px 10px 15px;
 }
 
 .food_entry_name{
 	width: 70%;
-	display: inline-block;
+    display: inline-block;
+    color: black;
+    font-weight: 100;
 }
 .food_entry_price{
 	width: 28%;
-	text-align: right;
-	display: inline-block;
+    text-align: right;
+    display: inline-block;
+    color: black;
+    font-weight: 100;
 }
 .food_entry_description{
 	margin-top: 10px;
-	clear: both;
-	font-size: 12px;
-	text-overflow: ellipsis;
+    clear: both;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    text-align: justify;
+    padding: 0px 5px 0px 5px;
+    color: black;
+    font-weight: 100;
 }
 /*------------------------------------------------------------------------------*/
 
@@ -292,7 +295,7 @@
     text-align: center;
     font-size: 15px;
     line-height: 40px;
-    background-color: rgb(66, 133, 244);
+    background-color: rgb(0,149,255);
     color: white;
 }
 .right_sidebar_options_btn:hover{
@@ -616,11 +619,16 @@
 	color: rgb(209,72,54);
 }
 .food_selected{
-	border: 2px solid rgb(0,149,255);
+	background-color: rgb(0,149,255);
+    
+}
+.food_selected span, .food_selected p{
+    color: white;
+    font-weight: 500;
 }
 
 .tab_selected{
-	border-bottom: 4px solid rgb(70, 131, 234);
+	border-bottom: 4px solid rgb(0,149,255);
 }
 
 

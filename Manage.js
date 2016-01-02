@@ -245,6 +245,9 @@
 				var food_items_list = document.getElementById("category_content_list");
 				food_items_list.insertBefore(new_food_item,food_items_list.firstChild);
 				new_food_item.click();
+				
+			// once a new food is made it should be saved 
+				saveFoodItem();
 		}
 
 		var action = 6;
@@ -298,8 +301,7 @@
 				categories_list.removeChild(category_li);
 				indexListItemsOfList(categories_list);
 
-			// hides the right_sidebar
-				hideRightSidebarElements();
+				unselectEveryThing();
 		}
 
 		var data_object = {"category_identifier":category_identifier};
