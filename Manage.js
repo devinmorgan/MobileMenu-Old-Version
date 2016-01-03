@@ -12,6 +12,17 @@
 	var UPSALES_ITEM_PRICE_PAIRS_DELIMITER = "RHVaDD0TZa";
 	var UPSALES_ITEM_DELIMITER = "WlDaAcTWs4";
 
+	var PORTIONS_ITEM_PRICE_PAIRS_DELIMITER = "NgQg2W6Dpn";
+	var PORTIONS_ITEM_DELIMITER = "VxZcCo8SdT"
+
+	var DEFAULT_FOOD_PHOTO_SRC = "http://localhost/MobileMenu/Images/no_image_available.png";
+	var DEFAULT_FOOD_NAME = "Untitled Food";
+	var DEFAULT_FOOD_IDENTIFIER = "";
+
+	var DEFAULT_CATEGORY_NAME = "Untitled Category";
+
+	var DEFAULT_SELECT_ELEMENT_VALUE = -1;
+
 //EVENT LISTENERS
 	document.addEventListener('click', function(e){
 		e = e || window.event;
@@ -65,10 +76,14 @@
 							// create and append an option_li to the option_ul that belongs to the instruction_ul
 							// as each option_li is created set its input value to option
 							for (var j = 0; j < options_list.length -1; j++) {
-									var current_option_li = current_instruction_li.getElementsByTagName("ul")[0].lastChild;
-									var current_option_input = current_option_li.getElementsByTagName("input")[0];
-									createNewOptionForInstruction(current_option_input,true);
-									current_option_input.value = options_list[j];
+								var current_option_li = current_instruction_li.getElementsByTagName("ul")[0].lastChild;
+								var current_option_input = current_option_li.getElementsByTagName("input")[0];
+								// since each Served With already has 1 options input, we only want to add 1 less
+								// than the number of options
+									if (j < options_list.length - 2) {
+										createNewOptionForInstruction(current_option_input,true);
+									}
+								current_option_input.value = options_list[j];
 							}
 						}
 					}
@@ -77,7 +92,6 @@
 			function populateExtrasAndSubstitutions(upsales) {
 				var upsales_ul = document.getElementById("upsales_ul");
 				upsales_ul.innerHTML = "";
-
 				// recall that upsales is an encoded string that stores items and
 				// their corresponding prices
 					var upsales_data = upsales.split(UPSALES_ITEM_PRICE_PAIRS_DELIMITER);
@@ -91,8 +105,8 @@
 
 							// getthe price and input elements and set their values correctly
 								var upsale_li_inputs = upsales_ul.lastChild.getElementsByTagName("input");
-								var item_input = upsales_ul.lastChild.getElementsByTagName("input")[0];
-								var price_input = upsales_ul.lastChild.getElementsByTagName("input")[1];
+								var item_input = upsale_li_inputs[0];
+								var price_input = upsale_li_inputs[1];
 
 								item_input.value = item_value;
 								price_input.value= price_value;
@@ -146,11 +160,17 @@
 					// provide the right sidebar header and the category title input with
 					// the NEW category's default name. This is necessary so that the NEW
 					// category gets saved with a title
-						title_input.value = "Untitled Category";
-						header.innerHTML = "Untitled Category";
-						from_time.value = -1;
-						until_time.value = -1;
-						type_input.value = -1;
+						title_input.value = DEFAULT_CATEGORY_NAME;
+						header.innerHTML = DEFAULT_CATEGORY_NAME;
+						from_time.value = DEFAULT_SELECT_ELEMENT_VALUE;
+						until_time.value = DEFAULT_SELECT_ELEMENT_VALUE;
+						type_input.value = DEFAULT_SELECT_ELEMENT_VALUE;
+
+					// reset the upsales and served with lists
+						document.getElementById("instructions_ul").innerHTML = "";
+						createNewInstructionForServedWith();
+						document.getElementById("upsales_ul").innerHTML = "";
+						createNewUpsaleItem();
 					
 					// since the category is a new one, save it
 						saveMenuCategory();
@@ -177,30 +197,78 @@
 		populatRightSidebarWithCategoryInfo(element);
 	}
 
-	// helper Functions
+		// helper Functions
+			function populatePortionsAndPrices(portion_prices) {
+				var portions_ul = document.getElementById("portions_ul");
+				portions_ul.innerHTML = "";
+				// recall that portion_prices is an encoded string that stores items and
+				// their corresponding prices
+					var portions_data = portion_prices.split(PORTIONS_ITEM_PRICE_PAIRS_DELIMITER);
+					if (portion_prices.length > 20 ) {
+						for (var i = 0; i < portions_data.length -1; i++) {
+							var item_value = portions_data[i].split(PORTIONS_ITEM_DELIMITER)[0];
+							var price_value = portions_data[i].split(PORTIONS_ITEM_DELIMITER)[1];
+
+							// create an portions_li for each item/price pair
+								createNewPortionSize();
+
+							// getthe price and input elements and set their values correctly
+								var portions_li_inputs = portions_ul.lastChild.getElementsByTagName("input");
+								var item_input = portions_li_inputs[0];
+								var price_input = portions_li_inputs[1];
+
+								item_input.value = item_value;
+								price_input.value= price_value;
+						}
+					}
+			}
 		function populatRightSidebarWithFoodInfo(element)
 		{
-			// set the right_sidebar_header to the food name and the title_element
-				var food_name = element.getElementsByClassName("food_entry_name")[0].innerHTML;
-				document.getElementById("right_sidebar_header").innerHTML = food_name;
-				returnFoodOrCategoryElementForClass("title","food").value = food_name;
+			var food_identifier = element.getAttribute("data-food-identifier");
 
-			// set the right_sidebar image to appropriate src
-				var food_image_src = element.getElementsByTagName("img")[0].src;
-				document.getElementById("right_sidebar_image_wrapper").getElementsByTagName("img")[0].src = food_image_src;
+			// food already exists in database
+				if (food_identifier !== "") {
 
-			// // set the price of the price_input appropriate price
-			// 	var food_price = element.getElementsByClassName("food_entry_price")[0].innerHTML;
-			// 	returnFoodOrCategoryElementForClass("price","food").value = food_price;
+					var data_object = {"food_identifier":food_identifier};
+					var action = 6;
 
-			// set the food_descrtiption to appropriate text
-				var food_description = element.getElementsByClassName("food_entry_description")[0].innerHTML;
-				returnFoodOrCategoryElementForClass("right_sidebar_textarea","food").value = food_description;
+					function responseFunction(result) {
+						var food_dict = JSON.parse(result)[0];
 
-			// // store the food_index number to remember which element populated the right_sidebar
-			// 	var food_index = getElementIndex(element);
-			// 	document.getElementById("right_sidebar_header").setAttribute("data-food-index",food_index);
+						// set the right_sidebar_header to the food name and the title_element
+							document.getElementById("right_sidebar_header").innerHTML = food_dict["food_name"];
+							returnFoodOrCategoryElementForClass("title","food").value = food_dict["food_name"];
 
+						// set the right_sidebar image to appropriate src
+							document.getElementById("right_sidebar_image_wrapper").
+								getElementsByTagName("img")[0].src = food_dict["photo_src"];
+
+						// set the food_description to appropriate text
+							returnFoodOrCategoryElementForClass("right_sidebar_textarea","food").value = food_dict["food_description"];
+
+						populatePortionsAndPrices(food_dict["portion_prices"]);
+					}
+
+					ajax(action,data_object,responseFunction,"populatRightSidebarWithFoodInfo");
+				}
+			// food is a NEW FOOD and does not exist in the database yet 
+				else {
+					document.getElementById("right_sidebar_header").innerHTML = DEFAULT_FOOD_NAME;
+					returnFoodOrCategoryElementForClass("title","food").value = DEFAULT_FOOD_NAME;
+
+					// set the right_sidebar image to appropriate src
+						document.getElementById("right_sidebar_image_wrapper").
+							getElementsByTagName("img")[0].src = DEFAULT_FOOD_PHOTO_SRC;
+
+					// set the food_descrtiption to appropriate text
+						returnFoodOrCategoryElementForClass("right_sidebar_textarea","food").value = "";
+
+					// clear out the portion size list AND add a blank li
+						var portions_ul = document.getElementById("portions_ul");
+						portions_ul.innerHTML = "";
+						createNewPortionSize();
+				}
+			
 		}
 	function selectFoodObject(element)
 	{
@@ -272,51 +340,30 @@
 	}
 	function createNewFoodItem()
 	{
-		var food_identifier = "";
 		var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
 		var category_identifier = category_li.getAttribute("data-category-identifier");
 
-		var data_object = {
-			"food_identifier":food_identifier,
-			"category_identifier":category_identifier,
-			"database_table":"food_categories"
-		};
+		// create the food item li for the category_content_list (the main feed)
+			new_food_item =document.createElement("li");
 
+		// give the food li the appropriate attributes
+			new_food_item.className = "food_entry";
+			new_food_item.setAttribute("onclick","selectFoodObject(this)");
+			new_food_item.setAttribute("data-food-identifier",DEFAULT_FOOD_IDENTIFIER);
 
-		function responseFunction(result) {
-			food_dict = JSON.parse(result);
-			// determine food item's attributes depending on whether it is NEW or not
-				var photo_src = "http://localhost/MobileMenu/Images/no_image_available.png";
-				var food_name = "Untitled Food";
-				var food_price = food_dict[0]["default_price"];
-				var food_description = food_dict["0"]["default_description"];
+		new_food_item.innerHTML =   '<div class="food_item">'+
+									    '<img class="food_item_img" src="'+DEFAULT_FOOD_PHOTO_SRC+'" alt="Picture of '+ DEFAULT_FOOD_NAME +'" />'+
+									    '<div class="food_item_info_wrapper">'+
+									        '<h4 class="food_item_title">'+ DEFAULT_FOOD_NAME +'</h4>'+
+									    '</div>'+
+									'</div>';
+		// append food item to list
+			var food_items_list = document.getElementById("category_content_list");
+			food_items_list.insertBefore(new_food_item,food_items_list.firstChild);
+			new_food_item.click();
 
-			// create the food item li for the category_content_list (the main feed)
-				new_food_item =document.createElement("li");
-
-			// give the food li the appropriate attributes
-				new_food_item.className = "food_entry";
-				new_food_item.setAttribute("onclick","selectFoodObject(this)");
-				new_food_item.setAttribute("data-food-identifier",food_identifier);
-
-			new_food_item.innerHTML =   '<div class="food_item">'+
-										    '<img class="food_item_img" src="'+photo_src+'" alt="Picture of '+ food_name +'" />'+
-										    '<div class="food_item_info_wrapper">'+
-										        '<h4 class="food_item_title">'+ food_name +'</h4>'+
-										    '</div>'+
-										'</div>';
-			// append food item to list
-				var food_items_list = document.getElementById("category_content_list");
-				food_items_list.insertBefore(new_food_item,food_items_list.firstChild);
-				new_food_item.click();
-
-			// once a new food is made it should be saved 
-				saveFoodItem();
-		}
-
-		var action = 6;
-		ajax(action,data_object,responseFunction,"createNewFoodItem");
-
+		// once a new food is made it should be saved 
+			saveFoodItem();
 	}
 	function createNewOptionForInstruction(element, is_no_event) {
         if (event.which == 13 || is_no_event === true) {
@@ -478,7 +525,9 @@
 				var instruction_value = instruction_ul[i].getElementsByClassName("instruction_input")[0].value;
 
 				// add instruction followd by instruction delimiter
-					encoded_string += instruction_value + SERVED_WITH_INSTRUCTION_DELIMITER;
+					if (instruction_value != "") {
+						encoded_string += instruction_value + SERVED_WITH_INSTRUCTION_DELIMITER;
+					}
 
 				var options_li = instruction_ul[i].getElementsByClassName("options_ul")[0].
 					getElementsByTagName("li");
@@ -486,7 +535,9 @@
 					var option_value = options_li[j].getElementsByClassName("options_input")[0].value;
 
 					// add option followed by option delimiter
-						encoded_string += option_value + SERVED_WITH_OPTION_DELIMITER
+						if (option_value != "") {
+							encoded_string += option_value + SERVED_WITH_OPTION_DELIMITER
+						}
 				}
 
 				// complete this segment of the string by adding the segment delimeter
@@ -495,14 +546,16 @@
 			return encoded_string;
 		}
 		function collectUpsalesDataFromRightSidebar() {
-			var upsales_ul = document.getElementById("upsales_ul");
+			var upsales_li = document.getElementsByClassName("upsales_li");
 			var encoded_string = "";
-			for (var i = 0; i < upsales_ul.length; i++) {
-				var input_list = upsales_ul[i].getElementsByTagName("input");
+			for (var i = 0; i < upsales_li.length; i++) {
+				var input_list = upsales_li[i].getElementsByTagName("input");
 				var item_value = input_list[0].value;
 				var price_value = input_list[1].value;
-
-				encoded_string += item_value + UPSALES_ITEM_DELIMITER + price_value + UPSALES_ITEM_PRICE_PAIRS_DELIMITER;
+				// add item_value AND price_value followed by delimiter
+				if (item_value != "" && price_value != "") {
+					encoded_string += item_value + UPSALES_ITEM_DELIMITER + price_value + UPSALES_ITEM_PRICE_PAIRS_DELIMITER;
+				}
 			}
 			return encoded_string;
 		}
@@ -510,16 +563,17 @@
 		// gets the category list item that will be "saved"
 			var category_li = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0];
 		// update the database with new info
-			var category_name = returnFoodOrCategoryElementForClass("title","category").value;
-			var start_time = returnFoodOrCategoryElementForClass("from_time","category").value;
-			var end_time = returnFoodOrCategoryElementForClass("until_time","category").value;
-			var category_type = returnFoodOrCategoryElementForClass("food_type_select","category").value;
+			var category_name = escapeHtml(returnFoodOrCategoryElementForClass("title","category").value);
+			var start_time = escapeHtml(returnFoodOrCategoryElementForClass("from_time","category").value);
+			var end_time = escapeHtml(returnFoodOrCategoryElementForClass("until_time","category").value);
+			var category_type = escapeHtml(returnFoodOrCategoryElementForClass("food_type_select","category").value);
+
 			var category_identifier = category_li.getAttribute("data-category-identifier");
 			var menu_position = getElementIndex(category_li);
 
 		// get all of the served_with and upsales information
-			var served_with = collectServedWithDataFromRightSidebar();
-			var upsales = collectUpsalesDataFromRightSidebar();
+			var served_with = escapeHtml(collectServedWithDataFromRightSidebar());
+			var upsales = escapeHtml(collectUpsalesDataFromRightSidebar());
 
 			var category_object = {
 				"category_name":category_name,
@@ -543,36 +597,43 @@
 
 			var action = 1;
 			ajax(action,category_object,responseFunction,"saveMenuCategory");
-
-	
 	}
+		function collectPortionPricesFromRightSidebar() {
+			var portions_li = document.getElementsByClassName("portions_li");
+			var encoded_string = "";
+			for (var i = 0; i < portions_li.length; i++) {
+				var input_list = portions_li[i].getElementsByTagName("input");
+				var item_value = input_list[0].value;
+				var price_value = input_list[1].value;
+				// add item_value AND price_value followed by delimiter
+				if (item_value != "" && price_value != "") {
+					encoded_string += item_value + PORTIONS_ITEM_DELIMITER + price_value + PORTIONS_ITEM_PRICE_PAIRS_DELIMITER;
+				}
+			}
+			return encoded_string;
+		}
 	function saveFoodItem()
 	{
 		// gets the food li that will be "saved"
 			var food_li = document.querySelectorAll(".food_entry.food_selected")[0];
 		// update the database with new info
-			var food_name = returnFoodOrCategoryElementForClass("title","food").value;
+			var food_name = escapeHtml(returnFoodOrCategoryElementForClass("title","food").value);
 			var photo_src = document.getElementById("right_sidebar_image_wrapper").
 				getElementsByTagName("img")[0].src;
-			var food_description = returnFoodOrCategoryElementForClass("right_sidebar_textarea","food").value;
-			var food_price = returnFoodOrCategoryElementForClass("price","food").value;
-			var start_time = returnFoodOrCategoryElementForClass("from_time","food").value;
-			var end_time = returnFoodOrCategoryElementForClass("until_time","food").value;
-			var food_type = returnFoodOrCategoryElementForClass("food_type_select","food").value;
+			var food_description = escapeHtml(returnFoodOrCategoryElementForClass("right_sidebar_textarea","food").value);
+			var portion_prices = escapeHtml(collectPortionPricesFromRightSidebar());
+			
 			var food_identifier = food_li.getAttribute("data-food-identifier");
 			var category_identifier = document.querySelectorAll(".left_sidebar_tab_li.item.item_selected")[0].
 				getAttribute("data-category-identifier");
 
 			var food_object = {
-				"food_name":food_name,
-				"photo_src":photo_src,
-				"food_description":food_description,
-				"food_price":food_price,
-				"start_time":start_time,
-				"end_time":end_time,
-				"food_type":food_type,
 				"food_identifier":food_identifier,
-				"category_identifier":category_identifier
+				"category_identifier":category_identifier,
+				"photo_src":photo_src,
+				"food_name":food_name,
+				"food_description":food_description,
+				"portion_prices":portion_prices,
 			};
 
 		function responseFunction(result) {
@@ -581,9 +642,7 @@
 				food_li.setAttribute("data-food-identifier",result.substring(0,10));
 
 			// update the attributes of the food li according to what was saved
-				food_li.getElementsByClassName("food_entry_name")[0].innerHTML = food_name;
-				food_li.getElementsByClassName("food_entry_price")[0].innerHTML = food_price;
-				food_li.getElementsByClassName("food_entry_description")[0].innerHTML = food_description;
+				food_li.getElementsByClassName("food_item_title")[0].innerHTML = food_name;
 				food_li.getElementsByTagName("img")[0].src = photo_src;
 			
 			// update the right sidebar header with new food name
@@ -922,6 +981,17 @@
 
 	
 //Generic Helper Functions
+	function escapeHtml(text) {
+		var map = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#039;'
+		};
+
+		return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
 	function hideRightSidebarElements()
 	{
 		// clear out the inputs in right sidebar category

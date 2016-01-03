@@ -175,23 +175,22 @@ switch ($action) {
 			$connection = null;
 		break;
 
-	case 6: // create a NEW FOOD (only new) for the provided category
+	case 6: // collects the information about a food item to populate right sidebar
 			try {
 				//create new PDO and set its error mode to exception
 					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-				$sql_query = "SELECT default_description, default_price 
-				FROM food_categories WHERE category_identifier = :category_identifier";
-				// NOTE: the default photo & name will be provided in js
+				$sql_query = "SELECT photo_src, food_name, food_description, portion_prices
+				 FROM food_items WHERE food_identifier = :food_identifier";
 
 				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
-					$statement->bindParam(':category_identifier', $data['category_identifier']);
-					
+					$statement->bindParam(':food_identifier', $data["food_identifier"]);
+
 				$statement->setFetchMode(PDO::FETCH_ASSOC);
 				$statement->execute();
-		
+
 				echo json_encode($statement->fetchAll(),JSON_FORCE_OBJECT);
 			}
 			catch(PDOException $exception) {
@@ -216,18 +215,15 @@ switch ($action) {
 
 					// new food ---> INSERT 
 						$sql_query = "INSERT INTO food_items (food_identifier,
-						category_identifier, photo_src, food_name, food_description, food_price,
-						start_time, end_time, food_type)
+						category_identifier, photo_src, food_name, food_description, portion_prices)
 						VALUES (:food_identifier, :category_identifier, :photo_src, :food_name,
-						:food_description, :food_price, :start_time, :end_time, :food_type)";
+						:food_description, :portion_prices)";
 				}
 				elseif (strlen($food_identifier) == 10){
 					// existing food ---> UPDATE
 						$sql_query = "UPDATE food_items 
-						SET category_identifier = :category_identifier, photo_src = :photo_src, 
-						food_name = :food_name, food_description = :food_description,
-						food_price = :food_price, start_time = :start_time, end_time = :end_time,
-						food_type = :food_type 
+						SET category_identifier = :category_identifier, photo_src = :photo_src, food_name = :food_name,
+						food_description = :food_description, portion_prices = :portion_prices
 						WHERE food_identifier = :food_identifier";
 				}
 
@@ -238,10 +234,7 @@ switch ($action) {
 					$statement->bindParam(':photo_src', $data['photo_src']);
 					$statement->bindParam(':food_name', $data['food_name']);
 					$statement->bindParam(':food_description', $data['food_description']);
-					$statement->bindParam(':food_price', $data['food_price']);
-					$statement->bindParam(':start_time', $data['start_time']);
-					$statement->bindParam(':end_time', $data['end_time']);
-					$statement->bindParam(':food_type', $data['food_type']);
+					$statement->bindParam(':portion_prices', $data['portion_prices']);
 
 				// execute query
 					$statement->execute();
