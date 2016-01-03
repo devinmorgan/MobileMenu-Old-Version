@@ -8,7 +8,7 @@ $_SESSION['restaurant_identifier'] = "1234567890";
 $servername = "localhost";
 $username = "devinm";
 $password = "IlikeXAMPP2";
-$dbname = "mobile_menu";
+$dbname = "mobile_menu2";
 
 // parse the encoded json object
 	$post_data_as_assoc_array = json_decode(file_get_contents('php://input'), true);
@@ -34,18 +34,17 @@ switch ($action) {
 
 					// new category ---> INSERT 
 						$sql_query = "INSERT INTO food_categories (category_identifier,
-						restaurant_identifier, menu_position, category_name, default_description, default_price,
-						start_time, end_time, default_type)
-						VALUES (:category_identifier, :restaurant_identifier, :menu_position, :category_name,
-						:default_description, :default_price, :start_time, :end_time, :default_type)";
+						restaurant_identifier, menu_position, category_name, start_time, end_time, 
+						category_type, served_with, upsales) VALUES (:category_identifier,
+						:restaurant_identifier, :menu_position, :category_name, :start_time,
+						:end_time, :category_type, :served_with, :upsales)";
 				}
 				elseif (strlen($category_identifier) == 10){
 					// existing category ---> UPDATE
 						$sql_query = "UPDATE food_categories 
 						SET restaurant_identifier = :restaurant_identifier, menu_position = :menu_position, 
-						category_name = :category_name, default_description = :default_description,
-						default_price = :default_price, start_time = :start_time, end_time = :end_time,
-						default_type = :default_type 
+						category_name = :category_name, start_time = :start_time, end_time = :end_time,
+						category_type = :category_type, served_with = :served_with, upsales = :upsales
 						WHERE category_identifier = :category_identifier";
 				}
 
@@ -55,11 +54,11 @@ switch ($action) {
 					$statement->bindParam(':restaurant_identifier', $_SESSION['restaurant_identifier']);
 					$statement->bindParam(':menu_position', $data['menu_position']);
 					$statement->bindParam(':category_name', $data['category_name']);
-					$statement->bindParam(':default_description', $data['default_description']);
-					$statement->bindParam(':default_price', $data['default_price']);
+					$statement->bindParam(':served_with', $data['served_with']);
+					$statement->bindParam(':upsales', $data['upsales']);
 					$statement->bindParam(':start_time', $data['start_time']);
 					$statement->bindParam(':end_time', $data['end_time']);
-					$statement->bindParam(':default_type', $data['default_type']);
+					$statement->bindParam(':category_type', $data['category_type']);
 
 				// execute query
 					$statement->execute();
@@ -135,8 +134,8 @@ switch ($action) {
 					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-				$sql_query = "SELECT category_name, default_description, default_price, start_time,
-				end_time, default_type FROM food_categories WHERE category_identifier = :category_identifier";
+				$sql_query = "SELECT category_name, start_time, end_time, category_type, served_with,
+				upsales FROM food_categories WHERE category_identifier = :category_identifier";
 
 				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);
@@ -262,8 +261,8 @@ switch ($action) {
 					$connection = new PDO("mysql:host=$servername;dbname=$dbname",$username,$password);
 					$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-				$sql_query = "SELECT food_identifier, photo_src, food_name, food_description,
-				food_price FROM food_items WHERE category_identifier = :category_identifier";
+				$sql_query = "SELECT food_identifier, photo_src, food_name FROM food_items
+				WHERE category_identifier = :category_identifier";
 
 				// prepare statement for sql_query AND bind parameters
 					$statement = $connection->prepare($sql_query);

@@ -165,44 +165,42 @@ input {
 		-webkit-column-count: 3;
 	}
 }
-
 .food_entry{
-	width: 290px;
     display: inline-block;
-    margin: 0px 0px 35px 0px;
+    margin: 0px 0px 15px 0px;
     padding: 0px 0px 0px 0px
 }
-.food_entry img{
-	max-width:290px;
-	max-height:100%;
+.food_item{
+  width: 300px;
+  font-weight: 100;
+}
+.food_item_info_wrapper{
+  padding: 10px 0px 0px 0px;
+}
+.food_item_img{
+    max-width: 300px;
+    max-height: 100%;
+}
+.food_item_title{
+    text-align: center;
+    margin: 0px 0px 10px 0px;
+    font-weight: 100;
 
 }
-.food_info_wrap{
-    padding: 5px 15px 10px 15px;
+.food_item_info_wrapper h5{
+    margin: 10px 0px 0px 0px;
 }
-
-.food_entry_name{
-	width: 70%;
-    display: inline-block;
-    color: black;
-    font-weight: 100;
+.food_item_info_ul{
+    padding: 0px 0px 0px 0px;
 }
-.food_entry_price{
-	width: 28%;
-    text-align: right;
-    display: inline-block;
-    color: black;
-    font-weight: 100;
+.food_item_info_span_L{
+  float:left:
 }
-.food_entry_description{
-	margin-top: 10px;
-    clear: both;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    text-align: justify;
-    padding: 0px 5px 0px 5px;
-    color: black;
-    font-weight: 100;
+.food_item_info_span_R{
+  float:right;
+}
+.food_item_instruction{
+    font-style:italic;
 }
 /*------------------------------------------------------------------------------*/
 
@@ -273,7 +271,7 @@ input {
 }
 .right_sidebar_textarea{
 	width: 310px;
-    height: 100px;
+    height: 50px;
     font-size: 13px;
     resize: vertical;
 }
@@ -318,13 +316,14 @@ input {
 #served_with_wrapper,#upsales_wrapper{
     margin: 25px 0px 25px 0px;
 }
-#served_with_header,#upsales_header {
+#served_with_header,#upsales_header,#portions_header {
     text-align: center;
     font-size: 16px;
     margin: 0px auto 0px auto;
     padding: 0px 0px 10px 0px;
+    font-weight: 100;
 }
-#instructions_ul,#upsales_ul{
+#instructions_ul,#upsales_ul,#portions_ul{
     padding: 0px 0px 0px 0px;
 }
 .instructions_li{
@@ -374,13 +373,13 @@ input {
 }
 
 /*                       right Sidebar Extras & Substitutions                 */
-.upsales_li{
+.upsales_li,.portions_li{
     margin: 3px 0px 0px 20px;
 }
-.upsales_item_input{
+.upsales_item_input,.portions_item_input{
     width:145px;
 }
-.upsales_price_input{
+.upsales_price_input,.portions_price_input{
     width:75px;
 }
 
