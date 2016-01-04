@@ -10,6 +10,12 @@ $username = "devinm";
 $password = "IlikeXAMPP2";
 $dbname = "mobile_menu";
 
+// DEFINTIONS
+	// these will be inserted between the INSTRUCTIONs and OPTIONs of
+	// the "Comes With" elements for a given food entry
+		define("8vcX8gmA0s", "INSTRUCTION_DELIMINATOR");
+		define("TohsAMqt6Z","OPTION_DELIMINATOR");
+
 // parse the encoded json object
 	$post_data_as_assoc_array = json_decode(file_get_contents('php://input'), true);
 

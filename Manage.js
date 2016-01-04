@@ -41,8 +41,8 @@
 			// get all of the HTML elements that need to be updated
 				var header = document.getElementById("right_sidebar_header");
 				var title_input = returnFoodOrCategoryElementForClass("title","category");
-				var description_textarea = returnFoodOrCategoryElementForClass("right_sidebar_textarea","category");
-				var price_input = returnFoodOrCategoryElementForClass("price","category");
+				// var description_textarea = returnFoodOrCategoryElementForClass("right_sidebar_textarea","category");
+				// var price_input = returnFoodOrCategoryElementForClass("price","category");
 				var from_time = returnFoodOrCategoryElementForClass("from_time","category");
 				var until_time = returnFoodOrCategoryElementForClass("until_time","category");
 				var type_input = returnFoodOrCategoryElementForClass("food_type_select","category");
@@ -62,8 +62,8 @@
 							// supply the necessary information to all of the HTML elements
 								header.innerHTML = category_dict["category_name"];
 								title_input.value = category_dict["category_name"];
-								description_textarea.value = category_dict["default_description"];
-								price_input.value = category_dict["default_price"];
+								// description_textarea.value = category_dict["default_description"];
+								// price_input.value = category_dict["default_price"];
 								from_time.value = category_dict["start_time"];
 								until_time.value = category_dict["end_time"];
 								type_input.value = category_dict["default_type"];
@@ -245,7 +245,7 @@
 				var food_items_list = document.getElementById("category_content_list");
 				food_items_list.insertBefore(new_food_item,food_items_list.firstChild);
 				new_food_item.click();
-				
+
 			// once a new food is made it should be saved 
 				saveFoodItem();
 		}
@@ -253,6 +253,48 @@
 		var action = 6;
 		ajax(action,data_object,responseFunction,"createNewFoodItem");
 
+	}
+	function createNewOptionForInstruction(element) {
+        if (event.which == 13) {
+            var options_ul = element.parentElement.parentElement;
+            var new_option_li = document.createElement("li");
+            new_option_li.className = "options_li";
+            new_option_li.innerHTML = '<label class="right_sidebar_li_label">Option </label>' +
+                                      '<input type="text" onkeydown="createNewOptionForInstruction(this)"'+
+                                          'class="options_input" placeholder="e.g. \'Whole Wheat\', \'White\', or \'Rye\'" />'+
+                                      '<span class="remove_option" onclick=deleteRightSidebarListItem(this)> X</span>';
+            options_ul.appendChild(new_option_li);
+            new_option_li.getElementsByTagName("input")[0].focus();
+        }
+    }
+    function createNewInstructionForServedWith() {
+        var instructions_ul = document.getElementById("instructions_ul");
+        var new_instruction_li = document.createElement("li");
+        new_instruction_li.className = "instructions_li";
+        new_instruction_li.innerHTML =  '<label class="right_sidebar_li_label">Instruction </label>'+
+                                        '<input type="text" class="instruction_input" placeholder="e.g. \'Choose 1 from: \'"/>'+
+                                        '<span class="remove_right_sidebar_li" onclick=deleteRightSidebarListItem(this)> X</span>'+
+                                          '<ul class="options_ul">'+
+                                              '<li class="options_li">'+
+                                                  '<label class="right_sidebar_li_label">Option </label>'+
+                                                  '<input type="text" onkeydown="createNewOptionForInstruction(this)" class="options_input" placeholder="e.g. \'Whole Wheat\', \'White\', or \'Rye\'" />'+
+                                                  '<span class="remove_right_sidebar_li" onclick=deleteRightSidebarListItem(this)> X</span>'+
+                                              '</li>'+
+                                          '</ul>';
+        instructions_ul.appendChild(new_instruction_li);
+    }
+
+	function createNewUpsaleItem() {
+		var upsales_ul = document.getElementById("upsales_ul");
+		var new_upsale_li = document.createElement("li");
+		new_upsale_li.className = "upsales_li";
+		new_upsale_li.innerHTML = '<label class="right_sidebar_li_label">Item </label>'+
+		                          '<input type="text" class="upsales_item_input" placeholder="e.g. \Add Steak\'"/>'+
+		                          '<label class="right_sidebar_li_label"> Price </label>'+
+		                          '<input type="text" class="upsales_price_input" placeholder="e.g. \'+$2.00\'"/>'+
+		                          '<span class="remove_right_sidebar_li" onclick="deleteRightSidebarListItem(this)"> X </span>';
+		  
+		 upsales_ul.appendChild(new_upsale_li);
 	}
 	function createNewFeedbackQuestion()
 	{
@@ -329,6 +371,16 @@
 		ajax(action,data_object,responseFunction,"deleteFoodItem");
 		
 	}
+	function deleteRightSidebarListItem(element) {
+        var ul = element.parentElement.parentElement;
+        // this doesn't work for instruction li because there is always at least
+        // 2 li elements in instructions_ul. But, with +New Served With, it doesn't
+        // really matter
+        if (ul.getElementsByTagName("li").length > 1) { 
+            var li = element.parentElement;
+            ul.removeChild(li); 
+        }
+    }
 	function deleteFeedbackQuestion(element)
 	{
 		var li_of_question = element.parentElement;
@@ -782,8 +834,8 @@
 		// clear out the inputs in right sidebar category
 		document.getElementById("right_sidebar_header").innerHTML = "";
 			returnFoodOrCategoryElementForClass("title","category").value = ""
-			returnFoodOrCategoryElementForClass("right_sidebar_textarea","category").value = "";
-			returnFoodOrCategoryElementForClass("price","category").value = "";
+			// returnFoodOrCategoryElementForClass("right_sidebar_textarea","category").value = "";
+			// returnFoodOrCategoryElementForClass("price","category").value = "";
 			returnFoodOrCategoryElementForClass("from_time","category").value = -1;
 			returnFoodOrCategoryElementForClass("until_time","category").value = -1;
 			returnFoodOrCategoryElementForClass("food_type_select","category").value = -1;
