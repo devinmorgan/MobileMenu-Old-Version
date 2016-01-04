@@ -146,70 +146,18 @@
 							<label style="font-weight:100;">Description</label>
 							<textarea class="right_sidebar_textarea" data-container-type="food" placeholder="Offer details about subsitions or add-ons available with this category"></textarea>
 						</div>
-						<div class="label_field_wrapper">
-								<label class="right_sidebar_label">Food Price</label>
-								<input type="text" class="right_sidebar_input price" data-container-type="food" placeholder="e.g. $9.99"></input>
-							</div>
-						<div class="label_field_wrapper">
-							<label class="right_sidebar_label">Served Time</label>
-							<select class="time_served_select until_time" data-container-type="food">
-								<option value="-1">--Until--</option>
-								<option value="6">6 a.m.</option>
-								<option value="7">7 a.m.</option>
-								<option value="8">8 a.m.</option>
-								<option value="9">9 a.m.</option>
-								<option value="10">10 a.m.</option>
-								<option value="11">11 a.m.</option>
-								<option value="12">12 a.m.</option>
-								<option value="13">1 p.m.</option>
-								<option value="14">2 p.m.</option>
-								<option value="15">3 p.m.</option>
-								<option value="16">4 p.m.</option>
-								<option value="17">5 p.m.</option>
-								<option value="18">6 p.m.</option>
-								<option value="19">7 p.m.</option>
-								<option value="20">8 p.m.</option>
-								<option value="21">9 p.m.</option>
-								<option value="22">10 p.m.</option>
-								<option value="23">11 p.m.</option>
-								<option value="0">12 a.m.</option>
-								<option value="1">1 a.m.</option>
-								<option value="2">2 a.m.</option>
-							</select>
-							<select class="time_served_select from_time" data-container-type="food">
-								<option value="-1">--From--</option>
-								<option value="6">6 a.m.</option>
-								<option value="7">7 a.m.</option>
-								<option value="8">8 a.m.</option>
-								<option value="9">9 a.m.</option>
-								<option value="10">10 a.m.</option>
-								<option value="11">11 a.m.</option>
-								<option value="12">12 a.m.</option>
-								<option value="13">1 p.m.</option>
-								<option value="14">2 p.m.</option>
-								<option value="15">3 p.m.</option>
-								<option value="16">4 p.m.</option>
-								<option value="17">5 p.m.</option>
-								<option value="18">6 p.m.</option>
-								<option value="19">7 p.m.</option>
-								<option value="20">8 p.m.</option>
-								<option value="21">9 p.m.</option>
-								<option value="22">10 p.m.</option>
-								<option value="23">11 p.m.</option>
-								<option value="0">12 a.m.</option>
-								<option value="1">1 a.m.</option>
-								<option value="2">2 a.m.</option>
-							</select>
-						</div>
-						<div class="label_field_wrapper">
-							<label class="right_sidebar_label">Food Type</label>
-							<select class="food_type_select" data-container-type="food">
-								<option value="-1">--Choose a type--</option>
-								<option value="drink">Drink</option>
-								<option value="starter">Starter</option>
-								<option value="main">Main</option>
-								<option value="finisher">Finisher</option>
-							</select>
+						<div id="upsales_wrapper">
+					    <div id="portions_header">Portion Sizes &amp; Prices</div>
+						    <ul id="portions_ul">
+						        <li class="portions_li">
+						            <label class="right_sidebar_li_label" >Size</label>
+						            <input type="text" class="portions_item_input" placeholder="e.g. 'Small', '1/4 lb', etc."/>
+						            <label class="right_sidebar_li_label" >Price</label>
+						            <input type="text" class="portions_price_input" placeholder="$8.99"/>
+						            <span class="remove_right_sidebar_li" onclick="deleteRightSidebarListItem(this)">X</span>
+						        </li>
+						    </ul>
+						    <div class="create_new_right_sidebar" onclick="createNewPortionSize()">+New Portion</div>
 						</div>
 						<ul class="right_sidebar_options_dd" data-container-type="food" style="display: none;">
 							<li id="test" class="right_sidebar_tab_li item" onclick="browsePhotos(this)">
