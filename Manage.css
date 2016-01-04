@@ -696,7 +696,9 @@ input {
 }
 .food_selected{
 	background-color: rgb(0,149,255);
-    
+}
+.food_selected .food_item_title{
+    color: white;
 }
 .food_selected span, .food_selected p{
     color: white;
